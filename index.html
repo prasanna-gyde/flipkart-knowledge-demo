@@ -209,7 +209,7 @@ summary { cursor: pointer; color: var(--accent); font-size: 14px; }
 .stage summary { font-weight: 500; }
 .stage select { display:block; width:min(100%,22rem); height:44px; padding:8px 12px; margin-bottom:12px; }
 .stage .actions { margin: 12px 0; }
-.stage .thread { max-height: 55vh; }
+.stage .thread { max-height: none; overflow: visible; margin: 0 0 10px; }
 .stage .exchange { margin-bottom: 14px; }
 .stage .thread p { margin: 5px 0; }
 .stage .chat-message { padding: 10px 14px; }
@@ -223,6 +223,27 @@ summary { cursor: pointer; color: var(--accent); font-size: 14px; }
 .tree-options button {justify-content:space-between; text-align:left; color:var(--ink); background:white; border-color:var(--rule);}
 .tree-options button:hover {background:#eff5f1; border-color:#9cbbaa;}
 .tree-trail {font-size:13px; color:var(--quiet);}
+@media (min-width:940px) and (min-height:600px) {
+  [data-route="desk"] #app { height:100dvh; grid-template-rows:minmax(0,1fr) auto; }
+  [data-route="desk"] .stage { height:100%; min-height:0; padding-block:18px 8px; display:flex; flex-direction:column; }
+  [data-route="desk"] .stage header { margin-bottom:14px; padding-bottom:10px; }
+  [data-route="desk"] .stage header p { margin:3px 0; }
+  [data-route="desk"] .stage h1 { font-size:clamp(32px,3vw,42px); margin:5px 0; }
+  [data-route="desk"] .columns { flex:1; min-height:0; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); }
+  [data-route="desk"] .columns > section:first-child { min-height:0; display:flex; flex-direction:column; }
+  [data-route="desk"] .columns > section:last-child { overflow-y:auto; }
+  [data-route="desk"] .thread { overflow-y:auto; min-height:0; scrollbar-gutter:stable; }
+  [data-route="desk"] .exchange { margin:0; }
+  [data-route="desk"] .exchange + .exchange { margin-top:10px; }
+  [data-route="desk"] .chat-message { padding:7px 12px; max-width:94%; font-size:15px; line-height:1.4; }
+  [data-route="desk"] .agent-message { margin-bottom:6px; }
+  [data-route="desk"] .chat-message .speaker { margin:0; font-size:12px; }
+  [data-route="desk"] .chat-message p { margin:2px 0; }
+  [data-route="desk"] .citation { margin:0; min-height:24px; }
+  [data-route="desk"] #ask, [data-route="desk"] .actions { flex-shrink:0; }
+  [data-route="desk"] .actions { margin:6px 0 0; }
+  [data-route="desk"] footer { padding-block:6px; }
+}
 </style></head>
 <body>
   <a class="skip" href="#workspace-main">Skip to content</a>
