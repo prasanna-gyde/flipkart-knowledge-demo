@@ -244,7 +244,7 @@ dialog.modal { border:0; border-radius:16px; padding:0; width:min(540px,94vw); m
 /* Phones and small tablets */
 @media (max-width:980px) {
   .modes a { min-height:38px; }
-  details > summary.small { min-height:40px; display:flex; align-items:center; }
+  details > summary.small { padding:10px 0; }
   .desk { grid-template-columns:220px minmax(0,1fr); height:auto; }
   .kpanel { grid-column:1 / -1; border-left:0; border-top:1px solid var(--line); }
   .messages { max-height:none; }
@@ -679,10 +679,10 @@ const appRoutes = {ask:['Ask','ask',askView], library:['Library','book',libraryV
 const groups = [['Support agents',['ask','library','updates']], ['Content admins',['changes','connectors']], ['Team managers',['readiness']]];
 function guide() {
   const steps = [
-    ['#desk/T-1042', 'Insert a reply on Priya’s ticket', state.inserted.has('T-1042')],
-    ['#ask', 'Look up FK-8115 in the app', state.lookedUp.has('FK-8115')],
+    ['#ask', 'Look up order FK-8115', state.lookedUp.has('FK-8115')],
+    ['#library', 'Search the library for “pickup”', !!state.searched],
     ['#changes', 'Publish the ₹1,000 minimum', state.version===2],
-    ['#desk/T-1063', 'Open Rahul’s new ticket', state.openedTickets.has('T-1063')],
+    ['#ask', 'Look up the new order FK-8107', state.lookedUp.has('FK-8107')],
     ['#updates', 'Take the quick check', state.attempts.some(a=>a.version===2)],
     ['#readiness', 'See who understood it', state.visited.has('readiness') && state.version===2],
     ['#connectors', 'Add a custom connector', !!state.custom]
@@ -691,21 +691,19 @@ function guide() {
   return `<details class="guide" ${state.guideOpen?'open':''}><summary>Try this · ${n}/${steps.length}</summary><div class="guide-panel"><p>Seven things to try. Refresh the page to start over.</p><ol>${steps.map(([h,t,d],i)=>`<li class="${d?'done':''}"><a href="${h}"><span class="step-n" aria-hidden="true">${d?'✓':i+1}</span><span class="step-t">${t}${d?'<span class="vh"> (done)</span>':''}</span></a></li>`).join('')}</ol></div></details>`;
 }
 function render() {
-  const [route, arg] = location.hash.slice(1).split('/');
-  const mode = appRoutes[route] ? 'app' : 'desk';
-  const key = mode==='app' ? route : 'desk';
-  state.visited.add(key);
-  const top = `<header class="topbar"><a class="brand" href="#desk" aria-label="Flipkart Knowledge home">${logo()}<span class="product">Knowledge</span></a>
-    <nav class="modes" aria-label="Where agents use it"><a href="#desk" ${mode==='desk'?'aria-current="page"':''}>${icon('desk')}In the support desk</a><a href="#ask" ${mode==='app'?'aria-current="page"':''}>${icon('app')}Knowledge app</a></nav>
+  const hashRoute = location.hash.slice(1).split('/')[0];
+  const route = appRoutes[hashRoute] ? hashRoute : 'ask';
+  const mode = 'app';
+  state.visited.add(route);
+  const top = `<header class="topbar"><a class="brand" href="#ask" aria-label="Flipkart Knowledge, Ask">${logo()}<span class="product">Knowledge</span></a>
     <div class="top-right"><span class="badge">Cashback ${rev(state.version)} live</span>${guide()}</div></header>`;
   let body;
-  if (mode==='desk') body = `<main>${deskView(arg)}</main>`;
-  else {
+  {
     const side = groups.map(([g,ids])=>`<h2>${g}</h2>${ids.map(id=>`<a href="#${id}" ${id===route?'aria-current="page"':''}>${icon(appRoutes[id][1])}${appRoutes[id][0]}${id==='updates'&&state.version===2&&!state.read.has(2)?'<span class="count">1</span>':''}${id==='changes'&&state.version===1&&state.review==='pending'?'<span class="count">1</span>':''}</a>`).join('')}`).join('');
     body = `<div class="shell"><nav class="side" aria-label="Knowledge app">${side}</nav><main class="page" id="main" tabindex="-1">${appRoutes[route][2]()}</main></div>`;
   }
   document.querySelector('#app').innerHTML = top + body;
-  document.title = (mode==='desk' ? 'Support desk' : appRoutes[route][0]) + ' · Flipkart Knowledge';
+  document.title = appRoutes[route][0] + ' · Flipkart Knowledge';
   const box = document.querySelector('.kpanel-body'); if (box && state.scrollPanel) { box.scrollTop = box.scrollHeight; state.scrollPanel = false; }
 }
 
@@ -740,7 +738,7 @@ document.addEventListener('submit', e => {
 });
 document.addEventListener('input', e => {
   if (e.target.id==='reply-box') state.replies[e.target.closest('[data-ticket]').dataset.ticket] = e.target.value;
-  if (e.target.dataset.input==='lib') { state.libQuery = e.target.value; const q = state.libQuery.toLowerCase();
+  if (e.target.dataset.input==='lib') { state.libQuery = e.target.value; if (/pick/i.test(state.libQuery) && !state.searched) { state.searched = true; const s = document.querySelector('.guide summary'); if (s) s.textContent = s.textContent.replace(/\d+\//, m => (parseInt(m)+1)+'/'); } const q = state.libQuery.toLowerCase();
     document.querySelector('#lib-list').innerHTML = libList(articles.filter(a => (state.libType==='All'||a.type===state.libType) && (!q || (a.title+' '+val(a.summary)+' '+a.owner).toLowerCase().includes(q)))); }
 });
 document.addEventListener('change', e => {

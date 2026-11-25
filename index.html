@@ -8,11 +8,11 @@
     :root { font: 16px/1.55 "Helvetica Neue", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif; color:#202022; background:#fff; --quiet:#65656b; --rule:#e3e3e7; }
     * { box-sizing:border-box; }
     body { margin:0; background:#fff; }
-    main { width:min(880px, calc(100% - 32px)); margin:auto; padding:64px 0 40px; }
+    main { width:min(1120px, calc(100% - 32px)); margin:auto; padding:64px 0 40px; }
     h1 { font-size:clamp(30px,4vw,40px); font-weight:400; letter-spacing:-.03em; margin:0 0 10px; line-height:1.15; }
     p { margin:0; max-width:62ch; }
     .lede { color:#46464c; margin-bottom:32px; }
-    .options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    .options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
     .option { border:1px solid var(--rule); border-radius:10px; padding:22px; display:flex; flex-direction:column; gap:10px; color:inherit; text-decoration:none; }
     a.option:hover { border-color:#9aa6bd; background:#fafbfd; }
     a.option:focus-visible { outline:3px solid #5480ff; outline-offset:3px; }
@@ -26,7 +26,7 @@
 .title { display:flex; align-items:center; gap:9px; flex-wrap:wrap; }
     .title .fk-logo { padding:9px 16px; transform:translateY(2px); }
     footer { margin-top:40px; padding-top:16px; border-top:1px solid var(--rule); font-size:12px; color:var(--quiet); }
-    @media (max-width:640px) { main { padding-top:36px; } .options { grid-template-columns:1fr; } }
+    @media (max-width:860px) { main { padding-top:36px; } .options { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -35,16 +35,22 @@
     <p class="lede">Design options for a support knowledge system. Each one follows a fictional cashback offer from review to a customer call. All data is sample data.</p>
     <div class="options">
       <a class="option" href="option-1/#desk">
-        <span class="label">Option 1</span>
+        <span class="label">Option 1 · Ask first</span>
         <h2>Knowledge workspace</h2>
-        <p>A separate workspace for support agents, content admins and team managers. Ask about an order, publish an offer change, practise it, and see who understood it.</p>
+        <p>A quiet, chat-first workspace. Agents ask about an order on a call and get the approved answer with its source. Admins publish changes and managers see who understood them.</p>
         <span class="go">Open Option 1 →</span>
       </a>
-      <a class="option" href="option-2/#desk">
-        <span class="label">Option 2</span>
-        <h2>Knowledge inside the ticket</h2>
-        <p>Answers, order checks and a suggested reply appear next to the customer ticket. The same knowledge also works as a standalone app with a library, updates and connectors.</p>
+      <a class="option" href="option-2/#ask">
+        <span class="label">Option 2 · Web app</span>
+        <h2>Full knowledge system</h2>
+        <p>A web app with order lookup, a searchable library, updates, a review board, custom connectors and team readiness. Content admins manage everything agents see from here.</p>
         <span class="go">Open Option 2 →</span>
+      </a>
+      <a class="option" href="option-3/#desk">
+        <span class="label">Option 3 · In-app</span>
+        <h2>Knowledge inside the support desk</h2>
+        <p>For agents only. Order checks, the next step and a suggested reply appear next to each ticket, with updates and search in the same panel. Content is managed in the web app.</p>
+        <span class="go">Open Option 3 →</span>
       </a>
     </div>
     <footer>Fictional offer · Scripted demo · Not connected to Flipkart systems</footer>

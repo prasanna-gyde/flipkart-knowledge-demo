@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flipkart Knowledge · Option 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f5f7; --surface:#fff; --ink:#16181d; --muted:#596070; --faint:#7d8492; --line:#e3e5ea; --line-strong:#cfd3da;
+  --blue:#2563d9; --blue-ink:#1c4db3; --blue-soft:#ebf1fd; --green:#137a4f; --green-soft:#e6f4ec;
+  --amber:#8f5300; --amber-soft:#fdf1dc; --red:#b42318; --red-soft:#fdecea; --radius:12px;
+  font:15px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--ink); background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); }
+h1,h2,h3,h4,p,ol,ul { margin:0; }
+button,input,select,textarea { font:inherit; color:inherit; }
+a { color:var(--blue-ink); text-underline-offset:3px; }
+:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+.skip { position:absolute; left:8px; top:-60px; background:#fff; padding:8px 12px; z-index:60; border-radius:8px; }
+.skip:focus { top:8px; }
+.vh { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+svg.i { width:16px; height:16px; flex:none; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+
+/* Top bar */
+.topbar { height:56px; display:flex; align-items:center; gap:14px; padding:0 16px; background:var(--surface); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20; }
+.brand { display:flex; align-items:center; gap:8px; text-decoration:none; color:var(--ink); flex:none; }
+.fk-logo { display:inline-flex; align-items:center; gap:4px; background:#ffe51f; border-radius:10px; padding:6px 11px; }
+.fk-logo img { display:block; }
+.brand .product { font-weight:600; font-size:16px; letter-spacing:-.01em; }
+.modes { display:flex; background:#eef0f3; border-radius:10px; padding:3px; gap:2px; }
+.modes a { display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; text-decoration:none; color:var(--muted); font-size:13px; font-weight:500; white-space:nowrap; }
+.modes a[aria-current] { background:#fff; color:var(--ink); box-shadow:0 1px 2px rgba(16,24,40,.12); }
+.top-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+.badge { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:3px 10px; border-radius:999px; background:var(--green-soft); color:var(--green); white-space:nowrap; }
+.badge::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+.guide { position:relative; }
+.guide summary { list-style:none; cursor:pointer; font-size:13px; font-weight:500; padding:6px 12px; border:1px solid var(--line-strong); border-radius:999px; white-space:nowrap; }
+.guide summary::-webkit-details-marker { display:none; }
+.guide-panel { position:absolute; right:0; top:calc(100% + 8px); width:300px; background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 32px rgba(16,24,40,.14); padding:12px; z-index:30; }
+.guide-panel p { font-size:13px; color:var(--muted); padding:2px 6px 8px; }
+.guide-panel ol { list-style:none; padding:0; display:grid; gap:2px; }
+.guide-panel a { display:grid; grid-template-columns:22px 1fr; gap:8px; align-items:center; padding:7px 6px; border-radius:8px; text-decoration:none; color:var(--ink); font-size:13.5px; }
+.guide-panel a:hover { background:#f4f5f7; }
+.step-n { width:20px; height:20px; border-radius:50%; border:1px solid var(--line-strong); display:grid; place-items:center; font-size:11px; color:var(--muted); }
+.done .step-n { background:var(--green); border-color:var(--green); color:#fff; }
+.done .step-t { color:var(--muted); }
+
+/* Shared pieces */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:36px; padding:7px 14px; border-radius:9px; border:1px solid var(--line-strong); background:#fff; font-size:14px; font-weight:500; cursor:pointer; text-decoration:none; color:var(--ink); }
+.btn:hover { background:#f5f6f8; }
+.btn.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+.btn.primary:hover { background:var(--blue-ink); }
+.btn.small { min-height:32px; padding:4px 11px; font-size:13px; }
+.btn.link { border-color:transparent; background:transparent; color:var(--blue-ink); padding-inline:6px; }
+.btn.link:hover { background:var(--blue-soft); }
+.btn[disabled] { opacity:.55; cursor:default; }
+.row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.tag { display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:500; padding:1px 8px; border-radius:999px; background:#eef0f3; color:var(--muted); white-space:nowrap; }
+.tag.blue { background:var(--blue-soft); color:var(--blue-ink); }
+.tag.green { background:var(--green-soft); color:var(--green); }
+.tag.amber { background:var(--amber-soft); color:var(--amber); }
+.tag.red { background:var(--red-soft); color:var(--red); }
+.card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); }
+.card-pad { padding:16px; }
+.card h2 { font-size:16px; font-weight:600; letter-spacing:-.01em; }
+.muted { color:var(--muted); }
+.small { font-size:13px; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; }
+.chip { border:1px solid var(--line-strong); background:#fff; border-radius:999px; padding:4px 12px; font-size:13px; cursor:pointer; min-height:32px; }
+.chip:hover { background:#f5f6f8; }
+.chip[aria-pressed=true] { background:var(--ink); color:#fff; border-color:var(--ink); }
+.field { display:grid; gap:6px; }
+.field label, .label { font-size:13px; font-weight:500; }
+.input, select.input, textarea.input { width:100%; border:1px solid var(--line-strong); border-radius:9px; padding:8px 12px; background:#fff; min-height:38px; }
+select.input { appearance:none; padding-right:36px; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23596070' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center; cursor:pointer; }
+.input:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px #2563d926; }
+.askbar { display:flex; align-items:center; gap:6px; border:1px solid var(--line-strong); border-radius:999px; padding:4px 4px 4px 14px; background:#fff; }
+.askbar:focus-within { border-color:#6b7a90; box-shadow:0 0 0 3px #2563d91f; }
+.askbar input { flex:1; min-width:0; border:0; outline:none; background:transparent; min-height:34px; }
+.askbar button { width:34px; height:34px; border-radius:50%; border:0; background:var(--ink); color:#fff; cursor:pointer; display:grid; place-items:center; flex:none; }
+.askbar button:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+th { text-align:left; font-weight:500; color:var(--muted); font-size:12.5px; padding:8px 10px; border-bottom:1px solid var(--line); white-space:nowrap; }
+td { padding:10px; border-bottom:1px solid var(--line); vertical-align:top; }
+tr:last-child td { border-bottom:0; }
+.table-wrap { overflow-x:auto; }
+code { font:12.5px/1.5 ui-monospace, Menlo, monospace; background:#f1f2f5; padding:1px 6px; border-radius:5px; }
+.sample { font-size:12px; color:var(--faint); }
+
+/* Knowledge blocks: verdict, checks, facts */
+.verdict { padding:14px; border-radius:12px; border:1px solid; display:grid; gap:4px; }
+.verdict.yes { background:var(--green-soft); border-color:#bfe2ce; }
+.verdict.no { background:var(--red-soft); border-color:#f3c9c4; }
+.verdict.info { background:var(--blue-soft); border-color:#cbd9f6; }
+.verdict h3 { font-size:16px; font-weight:600; letter-spacing:-.01em; display:flex; align-items:center; gap:8px; }
+.verdict p { font-size:14px; }
+.verdict .meta { font-size:12.5px; color:var(--muted); }
+.block-title { font-size:12.5px; font-weight:600; color:var(--muted); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+.checks { list-style:none; padding:0; display:grid; gap:10px; }
+.check { display:grid; grid-template-columns:22px 1fr; gap:10px; align-items:start; }
+.check .ic { width:22px; height:22px; border-radius:50%; display:grid; place-items:center; font-size:12px; font-weight:700; }
+.check.ok .ic { background:var(--green-soft); color:var(--green); }
+.check.fail .ic { background:var(--red-soft); color:var(--red); }
+.check.warn .ic { background:var(--amber-soft); color:var(--amber); }
+.check p { font-size:14px; line-height:1.4; }
+.src { font-size:12px; color:var(--faint); display:inline-flex; align-items:center; gap:4px; }
+.src::before { content:''; width:6px; height:6px; border-radius:2px; background:#b6bdc9; }
+.next { border-left:3px solid var(--blue); padding:2px 0 2px 12px; }
+.next p { font-size:14px; }
+.facts td { padding:7px 0; font-size:13.5px; }
+.facts td:nth-child(2) { font-weight:500; }
+.facts td:last-child { text-align:right; }
+.quote { background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px; font-size:14px; }
+.qa { display:grid; gap:8px; }
+.qa .q { justify-self:end; background:var(--blue-soft); padding:7px 12px; border-radius:14px 14px 4px 14px; font-size:14px; max-width:90%; }
+.qa .a { background:#fff; border:1px solid var(--line); padding:10px 12px; border-radius:4px 14px 14px 14px; font-size:14px; }
+.qa .a .src { margin-top:4px; }
+
+/* Support desk mode */
+.desk { display:grid; grid-template-columns:260px minmax(0,1fr) 410px; height:calc(100dvh - 56px); }
+.queue { border-right:1px solid var(--line); background:var(--surface); overflow:auto; }
+.queue-head { padding:14px 16px 10px; display:flex; justify-content:space-between; align-items:center; }
+.queue-head h2 { font-size:14px; font-weight:600; }
+.ticket-link { display:block; padding:12px 16px; border-top:1px solid var(--line); text-decoration:none; color:var(--ink); }
+.ticket-link:hover { background:#f7f8fa; }
+.ticket-link[aria-current] { background:var(--blue-soft); box-shadow:inset 3px 0 var(--blue); }
+.ticket-link .top { display:flex; justify-content:space-between; gap:8px; font-size:14px; font-weight:500; }
+.ticket-link .top span { font-size:12px; color:var(--faint); font-weight:400; }
+.ticket-link .sub { font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ticket-link .tag { margin-top:4px; }
+.thread-pane { display:flex; flex-direction:column; min-width:0; min-height:0; background:var(--bg); }
+.ticket-head { padding:14px 24px; border-bottom:1px solid var(--line); background:var(--surface); display:flex; justify-content:space-between; gap:12px; align-items:center; }
+.ticket-head h1 { font-size:17px; font-weight:600; letter-spacing:-.01em; }
+.ticket-head p { font-size:13px; color:var(--muted); }
+.messages { flex:1; overflow:auto; padding:20px 24px; display:flex; flex-direction:column; gap:12px; }
+.msg { max-width:min(78%,560px); padding:10px 14px; border-radius:14px; background:#fff; border:1px solid var(--line); font-size:14.5px; }
+.msg.agent { align-self:flex-end; background:var(--blue-soft); border-color:transparent; }
+.msg .who { display:block; font-size:12px; color:var(--muted); margin-bottom:2px; font-weight:500; }
+.reply { padding:12px 24px 16px; background:var(--surface); border-top:1px solid var(--line); }
+.reply textarea { width:100%; min-height:76px; resize:vertical; border:1px solid var(--line-strong); border-radius:10px; padding:10px 12px; }
+.reply textarea:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px #2563d926; }
+.reply-actions { display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:8px; }
+.kpanel { border-left:1px solid var(--line); background:#fafbfc; display:flex; flex-direction:column; min-height:0; }
+.kpanel-head { padding:10px 14px; border-bottom:1px solid var(--line); background:#fff; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.kpanel-head .t { display:flex; align-items:center; gap:8px; font-weight:600; font-size:14px; }
+.kpanel-head .t .fk-logo { padding:4px 7px; border-radius:7px; }
+.kpanel-body { flex:1; overflow:auto; padding:14px; display:grid; gap:14px; align-content:start; }
+.kpanel-ask { padding:10px 14px 14px; border-top:1px solid var(--line); background:#fff; display:grid; gap:8px; }
+.ptabs { display:flex; gap:2px; padding:0 10px; background:#fff; border-bottom:1px solid var(--line); }
+.ptabs a { display:inline-flex; align-items:center; gap:6px; padding:10px 10px 9px; font-size:13.5px; font-weight:500; color:var(--muted); text-decoration:none; border-bottom:2px solid transparent; min-height:40px; }
+.ptabs a:hover { color:var(--ink); }
+.ptabs a[aria-current] { color:var(--blue-ink); border-color:var(--blue); }
+.ptabs .count { font-size:11px; background:var(--blue); color:#fff; border-radius:999px; padding:0 7px; }
+.kpanel .article-row { grid-template-columns:1fr; padding:12px 14px; }
+.kpanel .article-row .meta { grid-column:1; grid-row:auto; text-align:left; }
+.kpanel .card { overflow:hidden; }
+.host-name { font-weight:600; font-size:16px; letter-spacing:-.01em; }
+.agent-chip { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); white-space:nowrap; }
+.agent-chip i { width:28px; height:28px; border-radius:50%; background:#dfe7fb; color:var(--blue-ink); display:grid; place-items:center; font-style:normal; font-weight:600; font-size:12px; }
+.guide-panel .foot { border-top:1px solid var(--line); margin-top:8px; padding:10px 6px 2px; font-size:12.5px; color:var(--muted); }
+.guide-panel .foot a { display:inline; padding:0; color:var(--blue-ink); font-size:12.5px; text-decoration:underline; }
+.guide-panel button.step { display:grid; grid-template-columns:22px 1fr; gap:8px; align-items:center; padding:7px 6px; border-radius:8px; font-size:13.5px; width:100%; text-align:left; background:none; border:0; cursor:pointer; }
+.guide-panel button.step:hover { background:#f4f5f7; }
+.guide-panel button.step .step-t { color:var(--blue-ink); font-weight:500; }
+.detected { font-size:13px; color:var(--muted); display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+
+/* Knowledge app mode */
+.shell { display:grid; grid-template-columns:232px minmax(0,1fr); min-height:calc(100dvh - 56px); }
+.side { background:var(--surface); border-right:1px solid var(--line); padding:12px; }
+.side h2 { font-size:12px; font-weight:500; color:var(--faint); padding:14px 10px 6px; }
+.side h2:first-child { padding-top:4px; }
+.side a { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; text-decoration:none; color:var(--muted); font-weight:500; font-size:14px; }
+.side a:hover { background:#f3f4f6; color:var(--ink); }
+.side a[aria-current] { background:var(--blue-soft); color:var(--blue-ink); }
+.side .count { margin-left:auto; font-size:11px; background:var(--blue); color:#fff; border-radius:999px; padding:0 7px; }
+.page { padding:28px 32px 48px; max-width:1140px; width:100%; }
+.page-head { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
+.eyebrow { font-size:12px; font-weight:500; color:var(--faint); display:block; margin-bottom:2px; }
+.page-head h1 { font-size:24px; font-weight:600; letter-spacing:-.02em; line-height:1.25; }
+.page-head p { color:var(--muted); margin-top:4px; max-width:62ch; }
+.grid2 { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:16px; align-items:start; }
+.stack { display:grid; gap:16px; align-content:start; }
+
+/* Library */
+.lib-tools { display:grid; gap:10px; margin-bottom:14px; }
+.article-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 16px; padding:14px 16px; border-top:1px solid var(--line); cursor:pointer; text-align:left; width:100%; background:none; border-left:0; border-right:0; border-bottom:0; }
+.article-row:first-child { border-top:0; }
+.article-row:hover { background:#f8f9fb; }
+.article-row h3 { font-size:15px; font-weight:600; }
+.article-row p { font-size:14px; color:var(--muted); grid-column:1; }
+.article-row .meta { grid-column:2; grid-row:1 / span 2; text-align:right; font-size:12.5px; color:var(--faint); white-space:nowrap; }
+
+/* Changes board */
+.board { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:16px; }
+.col { background:#eceef2; border-radius:12px; padding:10px; display:grid; gap:8px; align-content:start; min-height:120px; }
+.col h2 { font-size:13px; font-weight:600; color:var(--muted); padding:2px 4px; display:flex; justify-content:space-between; }
+.change-card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 12px; display:grid; gap:4px; text-align:left; width:100%; font-size:14px; }
+button.change-card { cursor:pointer; }
+button.change-card:hover { border-color:#9fb4e0; }
+button.change-card[aria-pressed=true] { border-color:var(--blue); box-shadow:0 0 0 2px #2563d933; }
+.change-card strong { font-weight:600; }
+.change-card span { font-size:12.5px; color:var(--muted); }
+.change-card .tag { justify-self:start; }
+.diff td:first-child { color:var(--muted); width:34%; }
+del { color:var(--red); text-decoration-color:var(--red); }
+ins { text-decoration:none; background:#fff2b8; padding:0 4px; border-radius:4px; font-weight:600; }
+.warn-box { background:var(--amber-soft); color:var(--amber); padding:10px 12px; border-radius:10px; font-size:13.5px; }
+.timeline { list-style:none; padding:0; display:grid; gap:10px; }
+.timeline li { display:grid; grid-template-columns:48px 1fr; gap:10px; font-size:14px; }
+.timeline time { color:var(--faint); font-size:12.5px; padding-top:1px; }
+
+/* Connectors */
+.conn-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.conn { text-align:left; background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px 14px; cursor:pointer; display:grid; gap:4px; }
+.conn:hover { border-color:#9fb4e0; }
+.conn[aria-pressed=true] { border-color:var(--blue); box-shadow:0 0 0 2px #2563d933; }
+.conn strong { font-weight:600; font-size:14.5px; display:flex; justify-content:space-between; gap:6px; align-items:center; }
+.conn span { font-size:12.5px; color:var(--muted); }
+.dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--green); margin-right:6px; }
+.dot.off { background:#c1c6cf; }
+.response td { font-size:13.5px; padding:7px 10px; }
+.checkbox-list { display:grid; gap:6px; }
+.checkbox-list label { display:flex; gap:8px; align-items:center; font-size:14px; font-weight:400; }
+
+/* Updates & readiness */
+.update { display:grid; gap:10px; }
+.update-head { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; flex-wrap:wrap; }
+.quiz { border-top:1px solid var(--line); padding-top:12px; display:grid; gap:12px; }
+.quiz fieldset { border:0; padding:0; margin:0; display:grid; gap:8px; }
+.quiz legend { font-size:14px; font-weight:500; margin-bottom:6px; padding:0; }
+.feedback { font-size:13.5px; padding:8px 10px; border-radius:8px; }
+.feedback.right { background:var(--green-soft); color:var(--green); }
+.feedback.wrong { background:var(--red-soft); color:var(--red); }
+.stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:16px; }
+.stat { background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+.stat strong { display:block; font-size:26px; font-weight:600; letter-spacing:-.02em; line-height:1.2; }
+.stat strong small { font-size:14px; font-weight:500; color:var(--faint); }
+.stat span { font-size:13px; color:var(--muted); }
+.bar { height:8px; background:#eceef2; border-radius:99px; overflow:hidden; margin-top:6px; }
+.bar i { display:block; height:100%; background:var(--blue); border-radius:99px; }
+.bar.low i { background:#d97706; }
+tr.you td { background:#f3f6fd; }
+
+/* Drawer and modal */
+dialog.drawer { margin:0 0 0 auto; height:100dvh; max-height:100dvh; width:min(500px,100vw); border:0; padding:0; box-shadow:-10px 0 34px rgba(16,24,40,.16); }
+dialog.drawer::backdrop, dialog.modal::backdrop { background:rgba(16,24,40,.28); }
+.d-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:18px 20px; border-bottom:1px solid var(--line); position:sticky; top:0; background:#fff; z-index:1; }
+.d-head h2 { font-size:19px; font-weight:600; letter-spacing:-.01em; }
+.d-body { padding:18px 20px 28px; display:grid; gap:16px; }
+.d-body h3 { font-size:14px; font-weight:600; }
+.d-body ol, .d-body ul { padding-left:20px; display:grid; gap:6px; font-size:14.5px; }
+.close { border:1px solid var(--line-strong); background:#fff; border-radius:999px; min-height:34px; padding:4px 12px; cursor:pointer; font-size:13px; flex:none; }
+dialog.modal { border:0; border-radius:16px; padding:0; width:min(540px,94vw); max-height:90dvh; box-shadow:0 20px 50px rgba(16,24,40,.25); }
+
+/* Phones and small tablets */
+@media (max-width:980px) {
+  .modes a { min-height:38px; }
+  details > summary.small { padding:10px 0; }
+  .desk { grid-template-columns:220px minmax(0,1fr); height:auto; }
+  .kpanel { grid-column:1 / -1; border-left:0; border-top:1px solid var(--line); }
+  .messages { max-height:none; }
+}
+@media (max-width:760px) {
+  .top-right { flex-wrap:wrap; min-width:0; }
+  .agent-chip > span:not(.vh) { display:none; }
+  .agent-chip { font-size:0; }
+  .topbar { height:auto; flex-wrap:wrap; padding:10px 16px; gap:10px; position:static; }
+  .modes { order:3; width:100%; }
+  .modes a { flex:1; justify-content:center; min-height:38px; }
+  .guide-panel { position:fixed; left:16px; right:16px; width:auto; top:auto; }
+  .desk { display:block; }
+  .queue { display:flex; overflow-x:auto; border-right:0; border-bottom:1px solid var(--line); }
+  .queue-head { display:none; }
+  .ticket-link { flex:0 0 220px; border-top:0; border-right:1px solid var(--line); }
+  .ticket-head, .messages, .reply { padding-inline:16px; }
+  .msg { max-width:92%; }
+  .kpanel-body, .kpanel-ask, .kpanel-head { padding-inline:16px; }
+  .shell { display:block; }
+  .side { border-right:0; border-bottom:1px solid var(--line); padding:8px 16px 10px; display:flex; flex-wrap:wrap; align-items:center; gap:0 4px; }
+  .side h2 { width:100%; padding:8px 0 2px; }
+  .side h2:first-child { padding-top:2px; }
+  .side a { padding:8px 10px; min-height:40px; }
+  .side a svg { display:none; }
+  .page { padding:20px 16px 40px; }
+  .grid2, .board, .conn-grid { grid-template-columns:1fr; }
+  .stats { gap:8px; }
+  .stat { padding:10px; }
+  .stat strong { font-size:20px; }
+  .stat span { font-size:12px; display:block; line-height:1.3; }
+  .article-row { grid-template-columns:1fr; }
+  .article-row .meta { grid-column:1; grid-row:auto; text-align:left; }
+  .chip { min-height:38px; }
+  .btn.small { min-height:38px; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div id="app"></div>
+<dialog class="drawer" id="drawer" aria-labelledby="drawer-title"></dialog>
+<dialog class="modal" id="modal" aria-labelledby="modal-title"></dialog>
+<script>
+const MARK = 'data:image/png;base64,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', WORD = 'data:image/png;base64,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';
+const logo = (small) => `<span class="fk-logo" aria-hidden="true"><img src="${MARK}" alt="" width="${small?18:24}" height="${small?15:20}"><img src="${WORD}" alt="" width="${small?33:43}" height="${small?13:17}"></span>`;
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => '₹' + n.toLocaleString('en-IN');
+const rev = v => 'v' + v + '.0';
+const clock = () => new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', hour12:false});
+const icons = {
+  ask:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/>',
+  bell:'<path d="M6 9a6 6 0 1 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+  flow:'<rect x="3" y="4" width="6" height="6" rx="1.5"/><rect x="15" y="14" width="6" height="6" rx="1.5"/><path d="M6 10v4a3 3 0 0 0 3 3h6"/>',
+  plug:'<path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0z"/><path d="M12 17v4"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  desk:'<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M9 9v9"/>',
+  app:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  send:'<path d="M12 19V5M5 12l7-7 7 7"/>',
+  open:'<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'
+};
+const icon = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${icons[n]}</svg>`;
+
+/* ---------- Sample data ---------- */
+const rules = {1:{min:500}, 2:{min:1000}};
+const orders = {
+  'FK-8042': {customer:'Priya S.', placed:'12 Nov', delivered:'14 Nov', daysSinceDelivery:11, list:1100, paid:850, method:'UPI', cashback:'Not credited', version:1},
+  'FK-8115': {customer:'Karan D.', placed:'16 Nov', delivered:'18 Nov', daysSinceDelivery:7, list:1600, paid:1450, method:'Credit card', cashback:'Not credited', version:1},
+  'FK-8107': {customer:'Rahul M.', placed:'Today', delivered:'Today', daysSinceDelivery:0, list:1199, paid:850, method:'UPI', cashback:'Not credited', version:2}
+};
+const pickup = {order:'FK-7731', item:'Running shoes', status:'Missed', note:'Customer not reachable', slot:'Tomorrow, 10 am to 1 pm'};
+const tickets = [
+  {id:'T-1042', order:'FK-8042', name:'Priya S.', subject:'Cashback not received', time:'10:24', topic:'cashback',
+   msg:'Hi, I paid ₹850 by UPI for order FK-8042 and I still haven’t got the ₹50 cashback. It was delivered on 14 Nov.'},
+  {id:'T-1047', order:'FK-8115', name:'Karan D.', subject:'Where is my ₹50 cashback?', time:'10:31', topic:'cashback',
+   msg:'I bought a mixer for ₹1,450 with my credit card. The weekend offer said ₹50 cashback. Where is it?'},
+  {id:'T-1063', order:'FK-8107', name:'Rahul M.', subject:'Cashback missing on new order', time:'Now', topic:'cashback', afterPublish:true,
+   msg:'I paid ₹850 by UPI today. My friend got ₹50 cashback for the same amount last week. Why didn’t I?'},
+  {id:'T-1051', order:'FK-7731', name:'Neha R.', subject:'Return pickup didn’t happen', time:'09:58', topic:'pickup',
+   msg:'The return pickup for my shoes was booked for yesterday but nobody came. What happens now?'}
+];
+const teams = [
+  {name:'Payments & refunds', agents:48, res:{1:{read:46, pass:43}, 2:{read:21, pass:15}}},
+  {name:'Offers & cashback', agents:36, res:{1:{read:35, pass:33}, 2:{read:14, pass:11}}},
+  {name:'Night shift', agents:22, res:{1:{read:20, pass:18}, 2:{read:3, pass:2}}}
+];
+const questionStats = {1:[92, 84], 2:[63, 88]};
+const articles = [
+  {id:'cashback', type:'Offer', title:'Weekend UPI cashback', owner:'Offers team', updated:()=>state.version===2?'Today':'10 Nov', version:()=>rev(state.version),
+   summary:()=>`Pay by UPI and spend at least ${money(rules[state.version].min)} after discounts to earn ₹50 cashback.`,
+   body:()=>[['The rule', `<p>Pay by UPI and spend at least ${money(rules[state.version].min)} after discounts to earn ₹50 cashback. Cashback is credited within 7 days of delivery.</p>`],
+     ['Which version applies', `<p>Use the version that was live when the order was placed. ${state.version===2?'Orders placed before today use v1.0 (₹500 minimum).':'A change to v2.0 (₹1,000 minimum) is in review.'}</p>`],
+     ['Check before you answer', '<ol><li>How did the customer pay?</li><li>How much did they pay after discounts?</li><li>What does the cashback status show?</li></ol>']]},
+  {id:'cashback-tree', type:'Decision tree', title:'Missing cashback', owner:'Payments desk', updated:'12 Nov', version:'v2.3',
+   summary:'Check the payment method, then the amount paid, then the cashback status.',
+   body:()=>[['Steps', '<ol><li>Not UPI: explain that the offer is for UPI only.</li><li>Below the minimum: explain the minimum spend.</li><li>Less than 7 days since delivery: ask the customer to wait.</li><li>More than 7 days and not credited: raise a request with the payments team.</li></ol>']]},
+  {id:'refunds', type:'Policy', title:'Refund timelines for prepaid orders', owner:'Returns team', updated:'18 Nov', version:'v3.1',
+   summary:'UPI refunds take up to 2 working days. Card refunds take up to 7.',
+   body:()=>[['Timelines', '<ul><li>UPI: up to 2 working days</li><li>Debit or credit card: up to 7 working days</li><li>Net banking: up to 5 working days</li></ul>'], ['If it’s late', '<p>Share the refund reference so the customer can check with their bank.</p>']]},
+  {id:'pickup', type:'Process', title:'Return pickup missed', owner:'Returns team', updated:'15 Nov', version:'v1.4',
+   summary:'Read the courier note, say sorry, then book the next slot.',
+   body:()=>[['Steps', '<ol><li>Check the pickup status and courier note.</li><li>Say sorry. Don’t argue about the courier note.</li><li>Book the next available slot and confirm it with the customer.</li><li>If the pickup is missed twice, raise it with the returns team.</li></ol>']]},
+  {id:'damaged', type:'Process', title:'Damaged item on delivery', owner:'Quality team', updated:'8 Nov', version:'v2.0',
+   summary:'Ask for a photo within 48 hours of delivery, then offer a replacement.',
+   body:()=>[['Steps', '<ol><li>Ask for a clear photo of the damage.</li><li>Check that it’s within 48 hours of delivery.</li><li>Offer a replacement. Offer a refund if no stock is left.</li></ol>']]},
+  {id:'address', type:'Policy', title:'Change address after dispatch', owner:'Logistics team', updated:'3 Nov', version:'v1.2',
+   summary:'The address can’t change after dispatch. Offer to cancel and reorder.',
+   body:()=>[['What to say', '<p>Explain that the parcel is already on its way. Offer to cancel it and help the customer place a new order.</p>']]},
+  {id:'emi', type:'Offer', title:'No-cost EMI eligibility', owner:'Offers team', updated:'1 Nov', version:'v4.0',
+   summary:'For orders above ₹3,000 on selected cards. The interest shows as a discount.',
+   body:()=>[['The rule', '<p>Orders above ₹3,000 on selected cards. The bank charges interest, and the same amount shows as a discount on the order.</p>']]},
+  {id:'sorry', type:'Script', title:'Saying sorry for a delay', owner:'Quality team', updated:'28 Oct', version:'v1.1',
+   summary:'Say sorry, give the new date, and say what you’ll do next.',
+   body:()=>[['Example', '<p>“Sorry your order is late. It will now arrive by Friday. I’ll message you as soon as it’s out for delivery.”</p>']]},
+  {id:'coins', type:'Policy', title:'Reward coins expiry', owner:'Loyalty team', updated:'20 Oct', version:'v2.2',
+   summary:'Coins expire 12 months after they are earned. Expired coins can’t be restored.',
+   body:()=>[['The rule', '<p>Coins expire 12 months after they are earned. Agents can’t restore expired coins.</p>']]}
+];
+const baseConnectors = [
+  {id:'orders', name:'Orders', kind:'REST API', on:true, sync:'Synced 2 min ago', fields:['order_id','placed_on','list_price','paid_amount','delivered_on'], usedBy:'Cashback checks, refunds'},
+  {id:'payments', name:'Payments', kind:'REST API', on:true, sync:'Synced 2 min ago', fields:['payment_method','upi_status'], usedBy:'Cashback checks'},
+  {id:'rewards', name:'Rewards ledger', kind:'Database, read only', on:true, sync:'Synced 5 min ago', fields:['cashback_status','credited_on'], usedBy:'Cashback checks'},
+  {id:'returns', name:'Returns & pickups', kind:'REST API', on:true, sync:'Synced 1 min ago', fields:['pickup_status','courier_note','next_slot'], usedBy:'Pickup tickets'},
+  {id:'desk', name:'Support desk', kind:'Embedded panel', on:true, sync:'Live', fields:['ticket_id','customer_message','order_id'], usedBy:'Finds the issue and order on each ticket'},
+  {id:'directory', name:'Team directory', kind:'Single sign-on', on:false, sync:'Not set up', fields:['agent_id','team','shift'], usedBy:'Readiness by team'}
+];
+
+/* ---------- Session state (resets on refresh) ---------- */
+const state = {
+  version:1, review:'pending', clarified:false, history:[['10:12','Meera submitted v2.0 for review.']],
+  read:new Set(), attempts:[], answers:{}, visited:new Set(), openedTickets:new Set(),
+  replies:{}, sent:{}, inserted:new Set(), requests:{}, rescheduled:false, panelQA:{},
+  lookup:'FK-8042', lookedUp:new Set(), askQA:[], libQuery:'', libType:'All',
+  field:'paid_amount', connSel:'orders', testOrder:'FK-8042', custom:null, draft:null, changeSel:'cashback', reportVersion:null
+};
+const visibleTickets = () => tickets.filter(t => !t.afterPublish || state.version === 2);
+const orderAvailable = id => orders[id] && (orders[id].version <= state.version);
+
+/* ---------- Decision logic ---------- */
+function evaluate(id) {
+  const o = orders[id], min = rules[o.version].min, first = o.customer.split(' ')[0];
+  const checks = [];
+  const upi = o.method === 'UPI';
+  checks.push({s:upi?'ok':'fail', t:upi ? 'Paid by UPI' : `Paid by ${o.method.toLowerCase()}. The offer is for UPI only`, src:'Payments'});
+  if (!upi) return {ok:false, checks, title:'Doesn’t qualify', reason:'This offer is for UPI payments only.', next:'Explain the UPI rule. No request is needed.',
+    reply:`Hi ${first}, thanks for waiting. This weekend offer gives ₹50 cashback on UPI payments only. Your order was paid by credit card, so it doesn’t qualify. Sorry for the confusion.`};
+  const usePaid = state.field === 'paid_amount', amount = usePaid ? o.paid : o.list;
+  const enough = amount >= min;
+  checks.push({s:enough?'ok':'fail', t:usePaid ? `Paid ${money(o.paid)} after discounts. The minimum is ${money(min)}` : `List price ${money(o.list)} used, which ignores discounts. The minimum is ${money(min)}`, src:usePaid?'Orders':'Orders · list_price (check the connector)'});
+  if (!enough) return {ok:false, checks, title:'Doesn’t qualify', reason:`The minimum spend is ${money(min)} after discounts.`, next:'Explain the minimum spend. No request is needed.',
+    reply:`Hi ${first}, thanks for waiting. For your order, this offer needs a UPI payment of at least ${money(min)} after discounts. You paid ${money(o.paid)}, so it doesn’t qualify for the ₹50 cashback. Orders placed before today had a lower minimum, which is why your friend got it.`};
+  const overdue = o.daysSinceDelivery > 7;
+  checks.push({s:overdue?'warn':'ok', t:overdue ? `Cashback not credited ${o.daysSinceDelivery} days after delivery. It’s due within 7` : 'Cashback is due within 7 days of delivery', src:'Rewards ledger'});
+  return {ok:true, checks, title:'Qualifies for ₹50 cashback', reason:`UPI payment of ${money(o.paid)} meets the ${money(min)} minimum.`, overdue,
+    next: overdue ? 'Raise a missing cashback request with the payments team.' : 'Ask the customer to wait until 7 days after delivery.',
+    reply: overdue
+      ? `Hi ${first}, thanks for waiting. Your ${money(o.paid)} UPI payment qualifies for the ₹50 cashback. It should have arrived by 21 Nov, so I’ve asked our payments team to check it. I’ll update you here.`
+      : `Hi ${first}, your order qualifies for the ₹50 cashback. It’s credited within 7 days of delivery, so please check again after that.`};
+}
+function classify(text) {
+  const t = text.toLowerCase();
+  if (/(refund|pickup|return|address|emi|damage|coins|delay|dispatch)/.test(t)) return 'search';
+  if (/\b(say|tell|word|reply|script)/.test(t)) return 'script';
+  if (/\b(card|debit|wallet|cod|cash on|emi|net ?banking)/.test(t)) return 'card';
+  if (/\b(when|how long|days|arrive|delay|late)/.test(t)) return 'timing';
+  if (/(qualif|eligib|minimum|valid|get (the )?cashback|850)/.test(t)) return 'eligibility';
+  if (/\b(check|verify|look at|first)/.test(t)) return 'check';
+  return 'search';
+}
+function findArticle(text) {
+  const words = text.toLowerCase().split(/\W+/).filter(w => w.length > 3);
+  let best = null, score = 0;
+  for (const a of articles) {
+    const hay = (a.title + ' ' + (typeof a.summary==='function'?a.summary():a.summary) + ' ' + a.type).toLowerCase();
+    const s = words.filter(w => hay.includes(w)).length;
+    if (s > score) { score = s; best = a; }
+  }
+  return best;
+}
+function answerFor(question, orderId, topic) {
+  if (topic === 'pickup') {
+    const t = question.toLowerCase(), src = {label:'Return pickup missed · v1.4', article:'pickup'};
+    if (/\b(say|tell|word|reply|script)/.test(t)) return {text:pickupReply, src};
+    if (/(again|twice|second)/.test(t)) return {text:'If the pickup is missed twice, raise it with the returns team. Don’t book a third slot yourself.', src};
+  }
+  const kind = classify(question);
+  const o = orders[orderId], v = o ? o.version : state.version, min = money(rules[v].min);
+  const terms = {label:`Weekend UPI cashback · ${rev(v)}`, article:'cashback'};
+  if (kind === 'script' && o) return {text:evaluate(orderId).reply, src:terms};
+  if (kind === 'card') return {text:'No. This offer is for UPI payments only. A card payment doesn’t qualify, whatever the amount.', src:terms};
+  if (kind === 'timing') return {text:'Cashback is credited within 7 days of delivery. If it’s later than that, raise a missing cashback request.', src:terms};
+  if (kind === 'eligibility' && o) { const e = evaluate(orderId); return {text:`${e.ok?'Yes':'No'}. ${e.reason}`, src:terms}; }
+  if (kind === 'eligibility') return {text:`Under ${rev(v)}, the customer must pay by UPI and spend at least ${min} after discounts.`, src:terms};
+  if (kind === 'check') return {text:'Check how they paid, the amount after discounts, and the cashback status. The checks above already do this from the order data.', src:{label:'Missing cashback · v2.3', article:'cashback-tree'}};
+  const a = findArticle(question);
+  if (a) return {text:(typeof a.summary==='function'?a.summary():a.summary), src:{label:`${a.title} · ${typeof a.version==='function'?a.version():a.version}`, article:a.id}};
+  return {text:'I couldn’t find that in the approved articles. Try a suggested question, or ask your team lead.', src:null};
+}
+
+/* ---------- Shared renderers ---------- */
+function verdictBlock(id) {
+  const o = orders[id], e = evaluate(id);
+  const newer = o.version < state.version ? `<span class="tag amber">${rev(state.version)} doesn’t apply to this order</span>` : '';
+  return `<div class="verdict ${e.ok?'yes':'no'}" role="status"><h3>${e.ok?'✓':'✕'} ${e.title}</h3><p>${e.reason}</p>
+    <p class="meta">Weekend UPI cashback · ${rev(o.version)}, the version live when the order was placed. <button class="btn link small" data-article="cashback">Offer terms</button></p>${newer?'<div>'+newer+'</div>':''}</div>`;
+}
+function checksBlock(id) {
+  const e = evaluate(id);
+  return `<div><div class="block-title">Checks from order data</div><ol class="checks">${e.checks.map(c =>
+    `<li class="check ${c.s}"><span class="ic" aria-hidden="true">${c.s==='ok'?'✓':c.s==='fail'?'✕':'!'}</span><div><p>${c.t}</p><span class="src">${c.src}</span><span class="vh"> ${c.s==='ok'?'passed':c.s==='fail'?'failed':'needs action'}</span></div></li>`).join('')}</ol></div>`;
+}
+function nextBlock(id, ticketId) {
+  const e = evaluate(id), req = state.requests[id];
+  const action = e.ok && e.overdue ? (req ? `<p class="small" role="status">Request ${req} raised with the payments team.</p>` : `<button class="btn small" data-act="raise" data-order="${id}">Raise request</button>`) : '';
+  return `<div class="next"><div class="block-title">Next step</div><p>${e.next}</p>${action?'<div style="margin-top:8px">'+action+'</div>':''}</div>`;
+}
+function replyBlock(id, ticketId) {
+  const e = evaluate(id);
+  return `<div><div class="block-title">Suggested reply</div><div class="quote">${esc(e.reply)}</div>
+    ${ticketId?`<div class="row" style="margin-top:8px"><button class="btn small primary" data-act="insert" data-ticket="${ticketId}">Insert into reply</button></div>`:''}</div>`;
+}
+function factsBlock(id) {
+  const o = orders[id];
+  const rows = [['Order', id, 'Orders'], ['Placed', o.placed, 'Orders'], ['List price', money(o.list), 'Orders'], ['Paid after discounts', money(o.paid), 'Orders'],
+    ['Payment method', o.method, 'Payments'], ['Delivered', o.delivered, 'Orders'], ['Cashback', o.cashback, 'Rewards ledger']];
+  return `<details><summary class="small" style="cursor:pointer;font-weight:500">All order data (${rows.length} fields)</summary>
+    <table class="facts" style="margin-top:6px"><tbody>${rows.map(r=>`<tr><td class="muted">${r[0]}</td><td>${r[1]}</td><td><span class="src">${r[2]}</span></td></tr>`).join('')}</tbody></table>
+    <p class="sample">Sample data. Not connected to Flipkart systems.</p></details>`;
+}
+function qaBlock(list) {
+  if (!list.length) return '';
+  return `<div class="qa">${list.map(x=>`<div class="q">${esc(x.q)}</div><div class="a">${esc(x.text)}${x.src?`<div><button class="btn link small src" data-article="${x.src.article}">${esc(x.src.label)}</button></div>`:''}</div>`).join('')}</div>`;
+}
+const suggestions = [['What should I say?'], ['What if they paid by card?'], ['When should the cashback arrive?']];
+const pickupSuggestions = [['What should I say?'], ['What if it’s missed again?'], ['How long will the refund take?']];
+const pickupReply = `Hi Neha, sorry the pickup didn’t happen. I’ve booked a new pickup for ${pickup.slot.toLowerCase()}. Please keep the shoes packed and ready.`;
+
+/* ---------- Support desk mode ---------- */
+function deskView(ticketId) {
+  const list = visibleTickets();
+  const t = list.find(x => x.id === ticketId) || list[0];
+  state.openedTickets.add(t.id);
+  const queue = list.map(x => `<a class="ticket-link" href="#desk/${x.id}" ${x.id===t.id?'aria-current="page"':''}>
+      <div class="top">${x.name}<span>${x.time}</span></div><div class="sub">${x.subject}</div>
+      ${x.afterPublish && !state.openedTickets.has(x.id) ? '<span class="tag blue">New</span>' : ''}${state.sent[x.id] ? '<span class="tag green">Replied</span>' : ''}</a>`).join('');
+  const sent = (state.sent[t.id] || []).map(m => `<div class="msg agent"><span class="who">You · ${m.time}</span>${esc(m.text)}</div>`).join('');
+  return `<div class="desk">
+    <nav class="queue" aria-label="Open tickets"><div class="queue-head"><h2>Open tickets</h2><span class="tag">${list.length}</span></div>${queue}</nav>
+    <section class="thread-pane" aria-label="Ticket ${t.id}">
+      <header class="ticket-head"><div><h1>${t.subject}</h1><p>${t.id} · ${t.name} · Order ${t.order}</p></div><span class="tag amber">Open</span></header>
+      <div class="messages" id="main" tabindex="-1"><div class="msg"><span class="who">${t.name} · ${t.time}</span>${esc(t.msg)}</div>${sent}</div>
+      <form class="reply" data-form="reply" data-ticket="${t.id}"><label class="vh" for="reply-box">Reply to ${t.name}</label>
+        <textarea id="reply-box" name="reply" placeholder="Write a reply…">${esc(state.replies[t.id]||'')}</textarea>
+        <div class="reply-actions"><span class="sample">Sample support desk. Replies stay in this demo.</span><button class="btn primary small" type="submit">Send reply</button></div></form>
+    </section>
+    <aside class="kpanel" aria-label="Flipkart Knowledge panel">${state.panelTab==='updates' ? panelUpdates(t) : state.panelTab==='search' ? panelSearch(t) : t.topic==='cashback' ? cashbackPanel(t) : pickupPanel(t)}</aside></div>`;
+}
+function panelHead(t) {
+  const unread = state.version===2 && !state.read.has(2);
+  const tab = (id, label, extra='') => `<a href="#desk/${t.id}${id==='ticket'?'':'/'+id}" ${state.panelTab===id?'aria-current="page"':''}>${label}${extra}</a>`;
+  return `<div class="kpanel-head"><div class="t">${logo(true)}Knowledge</div><span class="sample">Inside the support desk</span></div>
+    <nav class="ptabs" aria-label="Knowledge panel">${tab('ticket','This ticket')}${tab('updates','Updates', unread?'<span class="count">1</span>':'')}${tab('search','Search')}</nav>`;
+}
+function panelUpdates(t) {
+  const v = state.version;
+  const quizQs = [
+    {id:'q1', text:`An order placed under ${rev(v)} was paid by UPI. The customer paid ₹850 after discounts (list price ₹1,100). Does it qualify?`, correct: 850 >= rules[v].min ? 'yes' : 'no'},
+    {id:'q2', text:'A customer paid ₹1,450 by credit card. Does the order qualify?', correct:'no'}
+  ];
+  const quiz = quizQs.map(q => { const a = state.answers[v+q.id];
+    return `<fieldset><legend>${q.text}</legend><div class="row">${['yes','no'].map(o=>`<button type="button" class="chip" data-quiz="${q.id}" data-answer="${o}" data-correct="${q.correct}" aria-pressed="${a===o}">${o==='yes'?'Yes':'No'}</button>`).join('')}</div>
+      ${a ? `<p class="feedback ${a===q.correct?'right':'wrong'}" role="status">${a===q.correct?'Correct.':'Not quite.'} ${q.id==='q1'?`The minimum under ${rev(v)} is ${money(rules[v].min)} after discounts.`:'The offer is for UPI payments only.'}</p>` : ''}</fieldset>`; }).join('');
+  return panelHead(t) + `<div class="kpanel-body">
+    <article class="card card-pad update"><div class="update-head"><div><span class="eyebrow">Offers team · ${v===2?'Today':'10 Nov'} · ${rev(v)}</span><h2>${v===2?'Cashback minimum is now ₹1,000':'Weekend UPI cashback'}</h2></div>${v===2&&!state.read.has(2)?'<span class="tag blue">New</span>':state.read.has(v)?'<span class="tag green">Read</span>':''}</div>
+      <p class="small">${v===2?'Pay by UPI and spend at least ₹1,000 after discounts to earn ₹50 cashback. This applies to orders placed from today. Older orders keep the ₹500 minimum.':'Pay by UPI and spend at least ₹500 after discounts to earn ₹50 cashback.'}</p>
+      <div class="row">${state.read.has(v)?'':'<button class="btn primary small" data-act="read">Mark as read</button>'}<button class="btn small" data-article="cashback">Full offer</button></div>
+      <div class="quiz"><div class="block-title">Quick check · ${rev(v)}</div>${quiz}</div></article>
+    <article class="card card-pad update"><div class="update-head"><div><span class="eyebrow">Returns team · 18 Nov · v3.1</span><h2>Refund timelines</h2></div><span class="tag green">Read</span></div><p class="small muted">UPI refunds now take up to 2 working days.</p></article>
+  </div>`;
+}
+function panelSearch(t) {
+  const q = state.libQuery.toLowerCase();
+  const list = articles.filter(a => !q || (a.title+' '+val(a.summary)+' '+a.owner).toLowerCase().includes(q));
+  return panelHead(t) + `<div class="kpanel-body">
+    <div class="askbar" style="border-radius:10px"><label class="vh" for="lib-q">Search articles</label><input id="lib-q" data-input="lib" value="${esc(state.libQuery)}" placeholder="Search, for example “refund”" autocomplete="off"></div>
+    <section class="card" id="lib-list">${libList(list)}</section><p class="sample">Sample articles written for this demo.</p></div>`;
+}
+function panelAsk(t) {
+  return `<div class="kpanel-ask"><div class="chips" aria-label="Suggested questions">${(t.topic==='pickup'?pickupSuggestions:suggestions).map(([q])=>`<button class="chip" type="button" data-suggest="${esc(q)}" data-ticket="${t.id}">${q}</button>`).join('')}</div>
+    <form class="askbar" data-form="panel-ask" data-ticket="${t.id}"><label class="vh" for="panel-q">Ask about this ticket</label><input id="panel-q" name="q" placeholder="Ask about this ticket" autocomplete="off" required><button aria-label="Ask">${icon('send')}</button></form></div>`;
+}
+function cashbackPanel(t) {
+  return panelHead(t) + `<div class="kpanel-body">
+    <p class="detected">Found on this ticket: <span class="tag">Missing cashback</span><span class="tag">${t.order}</span></p>
+    ${verdictBlock(t.order)}${checksBlock(t.order)}${nextBlock(t.order, t.id)}${replyBlock(t.order, t.id)}${factsBlock(t.order)}${qaBlock(state.panelQA[t.id]||[])}
+  </div>` + panelAsk(t);
+}
+function pickupPanel(t) {
+  const reply = pickupReply;
+  return panelHead(t) + `<div class="kpanel-body">
+    <p class="detected">Found on this ticket: <span class="tag">Return pickup</span><span class="tag">${t.order}</span></p>
+    <div class="verdict info"><h3>Pickup missed</h3><p>Courier note: “${pickup.note}”.</p><p class="meta">Return pickup missed · v1.4 <button class="btn link small" data-article="pickup">Open article</button></p></div>
+    <div><div class="block-title">Checks from order data</div><ol class="checks">
+      <li class="check warn"><span class="ic" aria-hidden="true">!</span><div><p>Pickup status: ${pickup.status}</p><span class="src">Returns & pickups</span></div></li>
+      <li class="check ok"><span class="ic" aria-hidden="true">✓</span><div><p>First missed pickup for this return</p><span class="src">Returns & pickups</span></div></li></ol></div>
+    <div class="next"><div class="block-title">Next step</div><p>Say sorry, then book the next slot: ${pickup.slot}.</p>
+      <div style="margin-top:8px">${state.rescheduled?'<p class="small" role="status">Pickup booked for '+pickup.slot.toLowerCase()+'.</p>':'<button class="btn small" data-act="reschedule">Book next slot</button>'}</div></div>
+    <div><div class="block-title">Suggested reply</div><div class="quote">${esc(reply)}</div><div class="row" style="margin-top:8px"><button class="btn small primary" data-act="insert-text" data-ticket="${t.id}" data-text="${esc(reply)}">Insert into reply</button></div></div>
+    ${qaBlock(state.panelQA[t.id]||[])}</div>` + panelAsk(t);
+}
+
+/* ---------- Knowledge app mode ---------- */
+function askView() {
+  const id = orderAvailable(state.lookup) ? state.lookup : 'FK-8042';
+  const avail = Object.keys(orders).filter(orderAvailable);
+  return `<div class="page-head"><div><span class="eyebrow">Support agents</span><h1>Ask</h1><p>Look up an order to check the offer rules, or ask a question.</p></div></div>
+    <div class="grid2"><div class="stack">
+      <section class="card card-pad" aria-labelledby="lookup-h"><h2 id="lookup-h">Look up an order</h2>
+        <form class="row" data-form="lookup" style="margin:10px 0 8px"><label class="vh" for="order-id">Order ID</label><input class="input" id="order-id" name="order" value="${esc(id)}" style="flex:1;min-width:140px" autocomplete="off"><button class="btn primary" type="submit">Look up</button></form>
+        <div class="chips">${avail.map(o=>`<button class="chip" type="button" data-lookup="${o}" aria-pressed="${o===id}">${o}</button>`).join('')}</div></section>
+      ${verdictBlock(id)}
+      <section class="card card-pad stack">${checksBlock(id)}${nextBlock(id)}${replyBlock(id)}${factsBlock(id)}</section>
+    </div>
+    <div class="stack"><section class="card card-pad stack" aria-labelledby="askq-h"><h2 id="askq-h">Ask about ${id}</h2>
+      ${qaBlock(state.askQA)}
+      <div class="chips">${suggestions.map(([q])=>`<button class="chip" type="button" data-suggest="${esc(q)}">${q}</button>`).join('')}</div>
+      <form class="askbar" data-form="app-ask"><label class="vh" for="app-q">Ask a question</label><input id="app-q" name="q" placeholder="Ask a question" autocomplete="off" required><button aria-label="Ask">${icon('send')}</button></form></section>
+      <section class="card"><div class="card-pad" style="padding-bottom:4px"><h2>Related articles</h2></div>${['cashback','cashback-tree','refunds'].map(a=>articleRow(articles.find(x=>x.id===a))).join('')}</section>
+    </div></div>`;
+}
+const val = (x) => typeof x === 'function' ? x() : x;
+function articleRow(a) {
+  return `<button class="article-row" data-article="${a.id}"><h3>${a.title}</h3><span class="meta">${a.type} · ${val(a.version)}<br>Updated ${val(a.updated)}</span><p>${val(a.summary)}</p></button>`;
+}
+function libraryView() {
+  const types = ['All','Offer','Decision tree','Policy','Process','Script'];
+  const q = state.libQuery.toLowerCase();
+  const list = articles.filter(a => (state.libType==='All' || a.type===state.libType) && (!q || (a.title+' '+val(a.summary)+' '+a.owner).toLowerCase().includes(q)));
+  return `<div class="page-head"><div><span class="eyebrow">Support agents</span><h1>Library</h1><p>Approved articles, offers and decision trees. Each one shows its owner and version.</p></div></div>
+    <div class="lib-tools"><div class="askbar" style="border-radius:10px"><label class="vh" for="lib-q">Search the library</label><input id="lib-q" data-input="lib" value="${esc(state.libQuery)}" placeholder="Search, for example “refund” or “pickup”" autocomplete="off"></div>
+    <div class="chips" aria-label="Filter by type">${types.map(t=>`<button class="chip" type="button" data-libtype="${t}" aria-pressed="${t===state.libType}">${t}</button>`).join('')}</div></div>
+    <section class="card" id="lib-list">${libList(list)}</section><p class="sample" style="margin-top:10px">Sample articles written for this demo.</p>`;
+}
+function libList(list) { return list.length ? list.map(articleRow).join('') : '<p class="card-pad muted">No articles match. Try another word.</p>'; }
+
+function changesView() {
+  const cashCol = state.version===2 ? 'Published' : state.review==='returned' ? 'Draft' : 'In review';
+  const cards = [
+    {col:'Draft', title:'Reward coins expiry reminder', by:'Sana', when:'Yesterday'},
+    {col:cashCol, id:'cashback', title:'Weekend UPI cashback · v2.0', by:'Meera', when:'Today, 10:12', tag: state.review==='returned' ? '<span class="tag amber">Sent back</span>' : state.version===2 ? '<span class="tag green">Live</span>' : '<span class="tag blue">Needs review</span>'},
+    {col:'In review', title:'Damaged item: photo within 48 hours', by:'Vikram', when:'Today, 09:40'},
+    {col:'Published', title:'Refund timelines · v3.1', by:'Asha', when:'18 Nov'}
+  ];
+  const col = name => { const cs = cards.filter(c=>c.col===name); return `<div class="col"><h2>${name}<span>${cs.length}</span></h2>${cs.map(c => c.id
+      ? `<button class="change-card" data-act="select-change" aria-pressed="true"><strong>${c.title}</strong><span>${c.by} · ${c.when}</span>${c.tag||''}</button>`
+      : `<div class="change-card"><strong>${c.title}</strong><span>${c.by} · ${c.when}</span></div>`).join('')}</div>`; };
+  const done = state.version===2;
+  const appliesRow = state.clarified || done ? '<td>Orders placed after publishing</td>' : '<td><span class="tag amber">Not stated</span></td>';
+  const actions = done ? '<p role="status" class="small">Published by Arjun. Agents see it in Updates.</p>'
+    : state.review==='pending' ? `<div class="row"><button class="btn primary" data-act="publish">Approve and publish</button><button class="btn" data-act="return">Send back to Meera</button></div>`
+    : `<p class="small">Arjun asked Meera which orders the new minimum applies to.</p><div class="row" style="margin-top:8px"><button class="btn" data-act="resubmit">Resubmit as Meera</button></div>`;
+  return `<div class="page-head"><div><span class="eyebrow">Content admins</span><h1>Changes</h1><p>Every change is reviewed before agents see it.</p></div></div>
+    <div class="board">${col('Draft')}${col('In review')}${col('Published')}</div>
+    <div class="grid2"><section class="card card-pad stack" aria-labelledby="chg-h"><div><span class="eyebrow">Proposed by Meera from the offers team · Reviewer: Arjun</span><h2 id="chg-h">Weekend UPI cashback · v1.0 → v2.0</h2></div>
+      <table class="diff"><tbody><tr><td>Minimum spend</td><td><del>₹500</del> → <ins>₹1,000</ins></td></tr><tr><td>Cashback</td><td>₹50 (no change)</td></tr><tr><td>Payment method</td><td>UPI (no change)</td></tr><tr><td>Applies to</td>${appliesRow}</tr></tbody></table>
+      ${!state.clarified && !done ? '<div class="warn-box">This change doesn’t say which orders it applies to. Agents may apply ₹1,000 to older orders.</div>' : ''}
+      ${actions}</section>
+    <div class="stack"><section class="card card-pad"><h2>Impact</h2><ul style="padding-left:18px;margin-top:8px;display:grid;gap:4px;font-size:14px">
+      <li>106 agents in 3 teams get this in Updates.</li><li>12 open tickets mention this offer.</li><li>Tickets keep the version that was live when the order was placed.</li></ul></section>
+    <section class="card card-pad"><h2>History</h2><ol class="timeline" style="margin-top:10px">${state.history.map(([t,e])=>`<li><time>${t}</time><span>${e}</span></li>`).join('')}</ol></section></div></div>`;
+}
+
+function connectorsView() {
+  const list = state.custom ? [...baseConnectors, state.custom] : baseConnectors;
+  const sel = list.find(c=>c.id===state.connSel) || list[0];
+  const testable = Object.keys(orders).filter(orderAvailable);
+  const o = orders[state.testOrder] && orderAvailable(state.testOrder) ? orders[state.testOrder] : orders['FK-8042'];
+  const sample = {
+    orders:[['order_id', state.testOrder], ['placed_on', o.placed], ['list_price', o.list], ['paid_amount', o.paid], ['delivered_on', o.delivered]],
+    payments:[['payment_method', o.method], ['upi_status', o.method==='UPI'?'SUCCESS':'NOT_UPI']],
+    rewards:[['cashback_status', o.cashback.toUpperCase().replace(' ','_')], ['credited_on', 'null']],
+    returns:[['pickup_status', 'MISSED'], ['courier_note', pickup.note], ['next_slot', pickup.slot]],
+    desk:[['ticket_id','T-1042'], ['customer_message','Hi, I paid ₹850 by UPI…'], ['order_id','FK-8042']],
+    directory:[], delivery:[['shipment_id','SH-55210'], ['partner','Partner A'], ['last_scan','Delivered, 14 Nov 6:12 pm']]
+  }[sel.id] || [];
+  const mapping = sel.id==='orders' ? `<div class="field" style="margin-top:4px"><label for="map-field">Field for the minimum spend check</label>
+      <select class="input" id="map-field" data-input="field" style="max-width:340px"><option value="paid_amount" ${state.field==='paid_amount'?'selected':''}>paid_amount (amount paid after discounts)</option><option value="list_price" ${state.field==='list_price'?'selected':''}>list_price (price before discounts)</option></select>
+      <p class="small ${state.field==='paid_amount'?'muted':''}" role="status">${state.field==='paid_amount'?'Correct. The offer counts what the customer paid after discounts.':'Careful: list price ignores discounts. Under v2.0, FK-8107 (list price ₹1,199, paid ₹850) would wrongly qualify. Open Rahul’s ticket to see it.'}</p></div>` : '';
+  return `<div class="page-head"><div><span class="eyebrow">Content admins</span><h1>Connectors</h1><p>Connectors bring order, payment and ticket data into answers, so agents don’t have to look it up.</p></div>
+    <button class="btn primary" data-act="new-connector">Add a custom connector</button></div>
+    <div class="grid2"><div class="conn-grid" aria-label="Connectors">${list.map(c=>`<button class="conn" data-conn="${c.id}" aria-pressed="${c.id===sel.id}"><strong>${c.name}${c.sample?'<span class="tag blue">New</span>':''}</strong><span>${c.kind}</span><span><i class="dot${c.on?'':' off'}"></i>${c.sync}</span></button>`).join('')}</div>
+    <section class="card card-pad stack" aria-labelledby="conn-h"><div><span class="eyebrow">${sel.kind}</span><h2 id="conn-h">${sel.name}</h2><p class="small muted" style="margin-top:4px">Used for: ${sel.usedBy}</p></div>
+      <div><div class="block-title">Fields it reads</div><div class="chips">${sel.fields.map(f=>`<code>${f}</code>`).join('')}</div></div>
+      ${sel.on ? `<div><div class="block-title"><span>Test it</span>${['orders','payments','rewards'].includes(sel.id)?`<label class="vh" for="test-order">Test order</label><select class="input" id="test-order" data-input="test-order" style="width:auto;min-height:32px;padding:3px 34px 3px 10px;font-size:13px">${testable.map(x=>`<option ${x===state.testOrder?'selected':''}>${x}</option>`).join('')}</select>`:''}</div>
+        <div class="table-wrap"><table class="response"><thead><tr><th>Field</th><th>Sample value</th></tr></thead><tbody>${sample.map(([k,v])=>`<tr><td><code>${k}</code></td><td>${esc(v)}</td></tr>`).join('')}</tbody></table></div></div>` : '<p class="small muted">Not set up yet. Readiness uses sample team names until this is connected.</p>'}
+      ${mapping}<p class="sample">Sample connectors. They aren’t connected to any Flipkart system.</p></section></div>`;
+}
+function connectorModal() {
+  const d = state.draft;
+  return `<div class="d-head"><div><span class="eyebrow">Custom connector</span><h2 id="modal-title">Add a custom connector</h2></div><button class="close" data-close>Close</button></div>
+  <form class="d-body" data-form="connector">
+    <div class="field"><label for="c-name">Name</label><input class="input" id="c-name" name="name" value="Delivery status"></div>
+    <div class="field"><label for="c-type">Type</label><select class="input" id="c-type" name="type"><option>REST API</option><option>Database, read only</option><option>Webhook</option></select></div>
+    <div class="field"><label for="c-url">Address</label><input class="input" id="c-url" name="url" value="https://delivery-status.internal.example/v1"></div>
+    <div class="field"><label for="c-auth">Sign-in method</label><select class="input" id="c-auth" name="auth"><option>API key</option><option>OAuth 2.0</option><option>Mutual TLS</option></select></div>
+    <fieldset class="field" style="border:0;padding:0;margin:0"><legend class="label" style="margin-bottom:6px">Fields to read</legend><div class="checkbox-list">
+      ${['shipment_id','partner','last_scan','expected_delivery'].map((f,i)=>`<label><input type="checkbox" name="fields" value="${f}" ${i<3?'checked':''}> <code>${f}</code></label>`).join('')}</div></fieldset>
+    ${d && d.tested ? `<div class="verdict yes" role="status"><h3>✓ Test passed</h3><p class="small">Sample response for FK-8042: delivered by Partner A, last scan 14 Nov 6:12 pm.</p></div>` : ''}
+    <div class="row"><button class="btn" type="button" data-act="test-connector">Test connection</button><button class="btn primary" type="submit" ${d&&d.tested?'':'disabled'}>Save connector</button></div>
+    <p class="sample">Demo only. Nothing is sent to this address.</p></form>`;
+}
+
+function updatesView() {
+  const v = state.version;
+  const quizQs = [
+    {id:'q1', text:`An order placed under ${rev(v)} was paid by UPI. The customer paid ₹850 after discounts (list price ₹1,100). Does it qualify?`, correct: 850 >= rules[v].min ? 'yes' : 'no'},
+    {id:'q2', text:'A customer paid ₹1,450 by credit card. Does the order qualify?', correct:'no'}
+  ];
+  const quiz = quizQs.map(q => { const key = v+q.id, a = state.answers[key];
+    return `<fieldset><legend>${q.text}</legend><div class="row">${['yes','no'].map(o=>`<button type="button" class="chip" data-quiz="${q.id}" data-answer="${o}" data-correct="${q.correct}" aria-pressed="${a===o}">${o==='yes'?'Yes, it qualifies':'No, it doesn’t'}</button>`).join('')}</div>
+      ${a ? `<p class="feedback ${a===q.correct?'right':'wrong'}" role="status">${a===q.correct?'Correct.':'Not quite.'} ${q.id==='q1'?`The minimum under ${rev(v)} is ${money(rules[v].min)} after discounts.`:'The offer is for UPI payments only.'}</p>` : ''}</fieldset>`; }).join('');
+  const isNew = v===2 && !state.read.has(2);
+  return `<div class="page-head"><div><span class="eyebrow">Support agents</span><h1>Updates</h1><p>Approved changes for your team. Read each one, then take the quick check.</p></div></div>
+    <div class="stack" style="max-width:760px">
+    <article class="card card-pad update"><div class="update-head"><div><span class="eyebrow">Offers team · ${v===2?'Today':'10 Nov'} · ${rev(v)}</span><h2>${v===2?'Weekend UPI cashback: minimum is now ₹1,000':'Weekend UPI cashback'}</h2></div>${isNew?'<span class="tag blue">New</span>':state.read.has(v)?'<span class="tag green">Read</span>':''}</div>
+      <p>${v===2?'Pay by UPI and spend at least ₹1,000 after discounts to earn ₹50 cashback. This applies to orders placed from today. Older orders keep the ₹500 minimum.':'Pay by UPI and spend at least ₹500 after discounts to earn ₹50 cashback.'}</p>
+      ${v===1?'<p class="small muted">A change to this offer is in review. You’ll see it here once it’s published.</p>':''}
+      <div class="row">${state.read.has(v)?'':'<button class="btn primary small" data-act="read">Mark as read</button>'}<button class="btn small" data-article="cashback">Open the full offer</button></div>
+      <div class="quiz"><div class="block-title">Quick check · ${rev(v)}</div>${quiz}</div></article>
+    <article class="card card-pad update"><div class="update-head"><div><span class="eyebrow">Returns team · 18 Nov · v3.1</span><h2>Refund timelines for prepaid orders</h2></div><span class="tag green">Read</span></div><p class="muted">UPI refunds now take up to 2 working days, down from 3.</p></article>
+    <article class="card card-pad update"><div class="update-head"><div><span class="eyebrow">Returns team · 15 Nov · v1.4</span><h2>Return pickup missed</h2></div><span class="tag green">Read</span></div><p class="muted">Book the next slot straight away. Raise it only if the pickup is missed twice.</p></article>
+    </div>`;
+}
+
+function readinessView() {
+  const versions = state.version===2 ? [2,1] : [1];
+  const v = versions.includes(state.reportVersion) ? state.reportVersion : versions[0];
+  const mine = state.attempts.filter(a=>a.version===v);
+  const youRead = state.read.has(v) ? 1 : 0;
+  const youPass = ['q1','q2'].every(q => state.answers[v+q] && mine.some(a=>a.q===q && a.correct && a.last)) ? 1 : 0;
+  const rows = teams.map(t => ({name:t.name, agents:t.agents, read:t.res[v].read, pass:t.res[v].pass}));
+  const total = rows.reduce((a,r)=>({agents:a.agents+r.agents, read:a.read+r.read, pass:a.pass+r.pass}), {agents:1, read:youRead, pass:youPass});
+  const qs = questionStats[v];
+  return `<div class="page-head"><div><span class="eyebrow">Team managers</span><h1>Readiness</h1><p>Reading an update and understanding it are different. This page shows both.</p></div>
+    ${versions.length>1?`<div class="chips" aria-label="Offer version">${versions.map(x=>`<button class="chip" data-reportv="${x}" aria-pressed="${x===v}">Cashback ${rev(x)}</button>`).join('')}</div>`:''}</div>
+    <div class="stats"><div class="stat"><strong>${total.read}<small> of ${total.agents}</small></strong><span>read the update</span></div>
+      <div class="stat"><strong>${total.pass}</strong><span>passed the quick check</span></div>
+      <div class="stat"><strong>${total.read-total.pass}</strong><span>read it but didn’t pass</span></div></div>
+    <div class="grid2"><section class="card"><div class="card-pad" style="padding-bottom:0"><h2>By team</h2></div><div class="table-wrap"><table><thead><tr><th>Team</th><th>Agents</th><th>Read</th><th>Passed</th><th>Follow up</th></tr></thead><tbody>
+      ${rows.map(r=>`<tr><td>${r.name}</td><td>${r.agents}</td><td>${r.read}</td><td>${r.pass}</td><td>${r.read-r.pass}</td></tr>`).join('')}
+      <tr class="you"><td>You, in this demo</td><td>1</td><td>${youRead}</td><td>${youPass}</td><td>${Math.max(0,youRead-youPass)}</td></tr></tbody></table></div></section>
+    <section class="card card-pad stack"><h2>Which questions people miss</h2>
+      <div><p class="small">₹850 UPI order: does it qualify?</p><div class="bar ${qs[0]<75?'low':''}"><i style="width:${qs[0]}%"></i></div><p class="small muted" style="margin-top:4px">${qs[0]}% correct${qs[0]<75?'. Many agents still use the old ₹500 minimum.':''}</p></div>
+      <div><p class="small">₹1,450 card payment: does it qualify?</p><div class="bar"><i style="width:${qs[1]}%"></i></div><p class="small muted" style="margin-top:4px">${qs[1]}% correct</p></div>
+      ${qs[0]<75?'<button class="btn small" data-act="nudge" style="justify-self:start">'+(state.nudged?'Reminder sent to 18 agents':'Send a reminder to agents who missed it')+'</button>':''}</section></div>
+    <p class="sample" style="margin-top:12px">Team rows and percentages are sample data. Your row updates as you use the demo and resets when you refresh.</p>`;
+}
+
+/* ---------- Shell ---------- */
+const appRoutes = {ask:['Ask','ask',askView], library:['Library','book',libraryView], updates:['Updates','bell',updatesView], changes:['Changes','flow',changesView], connectors:['Connectors','plug',connectorsView], readiness:['Readiness','chart',readinessView]};
+const groups = [['Support agents',['ask','library','updates']], ['Content admins',['changes','connectors']], ['Team managers',['readiness']]];
+function guide() {
+  const steps = [
+    ['#desk/T-1042', 'Insert a reply on Priya’s ticket', state.inserted.has('T-1042')],
+    ['#desk/T-1047', 'See why Karan’s order doesn’t qualify', state.openedTickets.has('T-1047')],
+    ['#desk/T-1042/search', 'Search the panel for “refund”', !!state.searched],
+    ['publish', 'Publish the ₹1,000 minimum as a content admin', state.version===2],
+    ['#desk/T-1063', 'Open Rahul’s new ticket', state.openedTickets.has('T-1063')],
+    ['#desk/T-1063/updates', 'Read the update and take the check', state.attempts.some(a=>a.version===2)],
+    ['#desk/T-1051', 'Book Neha’s pickup', state.rescheduled]
+  ];
+  const n = steps.filter(s=>s[2]).length;
+  return `<details class="guide" ${state.guideOpen?'open':''}><summary>Try this · ${n}/${steps.length}</summary><div class="guide-panel"><p>Seven things to try. Refresh the page to start over.</p><ol>${steps.map(([h,t,d],i)=>{
+    const inner = `<span class="step-n" aria-hidden="true">${d?'✓':i+1}</span><span class="step-t">${t}${d?'<span class="vh"> (done)</span>':''}</span>`;
+    return `<li class="${d?'done':''}">${h==='publish' && !d ? `<button class="step" data-act="publish">${inner}</button>` : `<a href="${h==='publish'?'#desk/T-1063':h}">${inner}</a>`}</li>`; }).join('')}</ol>
+    <p class="foot">Agents only. Content admins write and publish articles in the web app. <a href="../option-2/#changes">See Option 2</a></p></div></details>`;
+}
+function render() {
+  const [, arg, tab] = location.hash.slice(1).split('/');
+  const mode = 'desk';
+  state.panelTab = ['updates','search'].includes(tab) ? tab : 'ticket';
+  const top = `<header class="topbar"><a class="brand" href="#desk" aria-label="Flipkart Support desk">${logo()}<span class="host-name">Support desk</span></a>
+    <div class="top-right"><span class="badge">Cashback ${rev(state.version)} live</span>${guide()}<span class="agent-chip"><i aria-hidden="true">AK</i><span class="vh">Signed in as </span>Ananya · Payments</span></div></header>`;
+  let body;
+  if (mode==='desk') body = `<main>${deskView(arg)}</main>`;
+  else {
+    const side = groups.map(([g,ids])=>`<h2>${g}</h2>${ids.map(id=>`<a href="#${id}" ${id===route?'aria-current="page"':''}>${icon(appRoutes[id][1])}${appRoutes[id][0]}${id==='updates'&&state.version===2&&!state.read.has(2)?'<span class="count">1</span>':''}${id==='changes'&&state.version===1&&state.review==='pending'?'<span class="count">1</span>':''}</a>`).join('')}`).join('');
+    body = `<div class="shell"><nav class="side" aria-label="Knowledge app">${side}</nav><main class="page" id="main" tabindex="-1">${appRoutes[route][2]()}</main></div>`;
+  }
+  document.querySelector('#app').innerHTML = top + body;
+  document.title = 'Support desk · Flipkart Knowledge in-app';
+  const box = document.querySelector('.kpanel-body'); if (box && state.scrollPanel) { box.scrollTop = box.scrollHeight; state.scrollPanel = false; }
+}
+
+/* ---------- Drawer and modal ---------- */
+const drawer = document.querySelector('#drawer'), modal = document.querySelector('#modal');
+function openArticle(id) {
+  const a = articles.find(x=>x.id===id); if (!a) return;
+  drawer.innerHTML = `<div class="d-head"><div><span class="eyebrow">${a.type} · ${val(a.version)} · ${a.owner}</span><h2 id="drawer-title">${a.title}</h2></div><button class="close" data-close>Close</button></div>
+    <div class="d-body"><p>${val(a.summary)}</p>${a.body().map(([h,b])=>`<section><h3>${h}</h3><div style="margin-top:6px">${b}</div></section>`).join('')}
+    <p class="small muted">Approved by the ${a.owner.toLowerCase()} · Updated ${val(a.updated)}</p><p class="sample">Sample article written for this demo.</p></div>`;
+  if (!drawer.open) drawer.showModal();
+}
+function openConnectorModal() { modal.innerHTML = connectorModal(); if (!modal.open) modal.showModal(); }
+
+/* ---------- Events ---------- */
+function ask(list, q, orderId, topic) { const a = answerFor(q, orderId, topic); list.push({q, ...a}); }
+document.addEventListener('submit', e => {
+  const f = e.target.closest('[data-form]'); if (!f) return; e.preventDefault();
+  const kind = f.dataset.form, data = new FormData(f);
+  if (kind==='reply') { const text = String(data.get('reply')||'').trim(); if (!text) return; const id = f.dataset.ticket;
+    (state.sent[id] ||= []).push({text, time:clock()}); state.replies[id]=''; render(); return; }
+  if (kind==='panel-ask') { const q = String(data.get('q')).trim(); if (!q) return; const t = tickets.find(x=>x.id===f.dataset.ticket);
+    ask(state.panelQA[t.id] ||= [], q, t.topic==='cashback'?t.order:null, t.topic); state.scrollPanel = true; render(); document.querySelector('#panel-q')?.focus(); return; }
+  if (kind==='app-ask') { const q = String(data.get('q')).trim(); if (!q) return; ask(state.askQA, q, state.lookup); render(); document.querySelector('#app-q')?.focus(); return; }
+  if (kind==='lookup') { const id = String(data.get('order')).trim().toUpperCase();
+    if (orderAvailable(id)) { state.lookup = id; state.lookedUp.add(id); state.askQA = []; render(); }
+    else { const inp = f.querySelector('input'); inp.setCustomValidity(orders[id] ? 'Order not found yet. It’s created after the v2.0 change is published. Try FK-8042 or FK-8115.' : 'Try FK-8042 or FK-8115.'); inp.reportValidity(); inp.addEventListener('input', () => inp.setCustomValidity(''), {once:true}); }
+    return; }
+  if (kind==='connector') { const name = String(data.get('name')||'Custom connector').trim() || 'Custom connector';
+    state.custom = {id:'delivery', name, kind:String(data.get('type')), on:true, sync:'Synced just now', fields:data.getAll('fields'), usedBy:'Delivery questions', sample:true};
+    state.connSel = 'delivery'; state.draft = null; modal.close(); render(); return; }
+});
+document.addEventListener('input', e => {
+  if (e.target.id==='reply-box') state.replies[e.target.closest('[data-ticket]').dataset.ticket] = e.target.value;
+  if (e.target.dataset.input==='lib') { state.libQuery = e.target.value; if (state.libQuery.trim().length >= 3) state.searched = true; const q = state.libQuery.toLowerCase();
+    document.querySelector('#lib-list').innerHTML = libList(articles.filter(a => (state.libType==='All'||a.type===state.libType) && (!q || (a.title+' '+val(a.summary)+' '+a.owner).toLowerCase().includes(q)))); }
+});
+document.addEventListener('change', e => {
+  if (e.target.dataset.input==='field') { state.field = e.target.value; render(); document.querySelector('#map-field')?.focus(); }
+  if (e.target.dataset.input==='test-order') { state.testOrder = e.target.value; render(); document.querySelector('#test-order')?.focus(); }
+});
+document.addEventListener('toggle', e => { if (e.target.classList?.contains('guide')) state.guideOpen = e.target.open; }, true);
+document.addEventListener('click', e => {
+  const el = e.target.closest('button, a'); if (!el) return;
+  if (el.closest('.guide-panel') && el.matches('a')) { state.guideOpen = false; }
+  if (el.dataset.close !== undefined) { el.closest('dialog').close(); return; }
+  if (el.dataset.article) { openArticle(el.dataset.article); return; }
+  if (el.dataset.suggest) { const q = el.dataset.suggest;
+    if (el.dataset.ticket) { const t = tickets.find(x=>x.id===el.dataset.ticket); ask(state.panelQA[t.id] ||= [], q, t.topic==='cashback'?t.order:null, t.topic); state.scrollPanel = true; }
+    else ask(state.askQA, q, state.lookup);
+    render(); return; }
+  if (el.dataset.lookup) { state.lookup = el.dataset.lookup; state.lookedUp.add(el.dataset.lookup); state.askQA = []; render(); return; }
+  if (el.dataset.libtype) { state.libType = el.dataset.libtype; render(); document.querySelector(`[data-libtype="${el.dataset.libtype}"]`)?.focus(); return; }
+  if (el.dataset.conn) { state.connSel = el.dataset.conn; render(); document.querySelector(`[data-conn="${el.dataset.conn}"]`)?.focus(); return; }
+  if (el.dataset.reportv) { state.reportVersion = Number(el.dataset.reportv); render(); return; }
+  if (el.dataset.quiz) { const v = state.version, key = v+el.dataset.quiz, correct = el.dataset.answer===el.dataset.correct;
+    state.attempts.forEach(a => { if (a.version===v && a.q===el.dataset.quiz) a.last = false; });
+    state.answers[key] = el.dataset.answer; state.attempts.push({version:v, q:el.dataset.quiz, correct, last:true}); render();
+    document.querySelector(`[data-quiz="${el.dataset.quiz}"][data-answer="${el.dataset.answer}"]`)?.focus(); return; }
+  const act = el.dataset.act; if (!act) return;
+  switch (act) {
+    case 'insert': { const t = tickets.find(x=>x.id===el.dataset.ticket); state.replies[t.id] = evaluate(t.order).reply; state.inserted.add(t.id); render(); document.querySelector('#reply-box')?.focus(); return; }
+    case 'insert-text': state.replies[el.dataset.ticket] = el.dataset.text; state.inserted.add(el.dataset.ticket); render(); document.querySelector('#reply-box')?.focus(); return;
+    case 'raise': state.requests[el.dataset.order] = 'CB-' + (2230 + Object.keys(state.requests).length + 1); break;
+    case 'reschedule': state.rescheduled = true; break;
+    case 'open-app': state.lookup = el.dataset.order && orderAvailable(el.dataset.order) ? el.dataset.order : state.lookup; state.lookedUp.add(state.lookup); state.askQA = []; return;
+    case 'publish': state.version = 2; state.review = 'published'; state.guideOpen = true; break;
+    case 'return': state.review = 'returned'; state.history.push([clock(), 'Arjun sent v2.0 back to Meera: “Which orders does this apply to?”']); break;
+    case 'resubmit': state.review = 'pending'; state.clarified = true; state.history.push([clock(), 'Meera added “Applies to orders placed after publishing” and resubmitted.']); break;
+    case 'read': state.read.add(state.version); break;
+    case 'nudge': state.nudged = true; break;
+    case 'new-connector': state.draft = {tested:false}; openConnectorModal(); return;
+    case 'test-connector': state.draft = {tested:true}; { const f = modal.querySelector('form'); const keep = new FormData(f); openConnectorModal(); const nf = modal.querySelector('form');
+      ['name','url'].forEach(n => nf.elements[n].value = keep.get(n)); ['type','auth'].forEach(n => nf.elements[n].value = keep.get(n));
+      nf.querySelectorAll('[name=fields]').forEach(c => c.checked = keep.getAll('fields').includes(c.value)); nf.querySelector('[type=submit]').focus(); } return;
+    case 'select-change': return;
+    default: return;
+  }
+  render();
+});
+drawer.addEventListener('click', e => { if (e.target === drawer) drawer.close(); });
+modal.addEventListener('click', e => { if (e.target === modal) modal.close(); });
+document.querySelector('.skip').addEventListener('click', e => { e.preventDefault(); const m = document.querySelector('#main'); m?.focus(); });
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0,0); });
+render();
+</script>
+</body>
+</html>
