@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Flipkart Knowledge</title>
+  <style>
+:root {
+  font: 16px/1.55 "Helvetica Neue", "Segoe UI", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #202022; background: #ffffff;
+  --ink: #202022; --quiet: #65656b; --rule: #e3e3e7; --accent: #2046c8;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: inherit; text-underline-offset: .25em; }
+button, input, select { font: inherit; }
+button, .button { cursor: pointer; }
+:focus-visible { outline: 3px solid #5480ff; outline-offset: 3px; }
+.skip { position: absolute; z-index: 5; transform: translateY(-130%); background: white; padding: 8px; }
+.skip:focus { transform: translateY(0); }
+.mast,main,footer { width: min(1280px,92%); margin: auto; }
+.mast { display: flex; justify-content: space-between; align-items: center; gap: 20px; min-height: 76px; border-bottom: 1px solid var(--ink); }
+.brand { font-weight: 450; font-size: 19px; letter-spacing: -.04em; text-decoration: none; white-space: nowrap; }
+.brand span { color: #86938c; margin: 0 5px; font-weight: 400; }
+nav { display: flex; gap: clamp(12px,2vw,32px); align-self: stretch; }
+nav a { text-decoration: none; align-content: center; font-size: 13px; font-weight: 400; border-bottom: 3px solid transparent; padding-top: 3px; color: var(--quiet); }
+nav [aria-current] { border-color: currentColor; color: var(--ink); }
+main { padding: 36px 0; min-height: 72vh; }
+footer { border-top: 1px solid var(--rule); display: flex; justify-content: space-between; gap: 12px; padding: 18px 0 26px; font-size: 11px; color: var(--quiet); }
+h1,h2,h3,p { margin: 0; }
+h1,h2,h3 { line-height: 1.15; font-weight: 350; letter-spacing: -.035em; }
+h1 { font-size: clamp(40px,5vw,80px); }
+h2 { font-size: clamp(25px,2.4vw,40px); }
+h3 { font-size: 19px; }
+p { max-width: 68ch; margin: 12px 0 20px; }
+.kicker, .paper small { display: block; color: var(--quiet); font: 450 12px/1.5 "Helvetica Neue",Arial,sans-serif; letter-spacing: .025em; text-transform: none; margin-bottom: 18px; }
+.button,button { display: inline-flex; justify-content: center; align-items: center; text-decoration: none; min-height: 40px; padding: 9px 16px; border: 1px solid var(--ink); color: #fff; background: var(--ink); font-weight: 450; font-size: 14px; border-radius: 4px; }
+button:hover,.button:hover { filter: brightness(.88); }
+.secondary { color: var(--ink); background: transparent; border-color: var(--rule); }
+.actions { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; }
+.link { font-size: 14px; font-weight: 450; color: var(--accent); }
+.front { display: grid; grid-template-columns: 1fr 1.15fr; background: #efece0; }
+.cover { padding: clamp(25px,4vw,65px); align-self: center; }
+.cover h1 { font: 300 clamp(46px,5vw,76px)/1.04 "Helvetica Neue",Arial,sans-serif; letter-spacing: -.081em; }
+.cover h1 span { color: #3755c5; }
+.cover p { max-width: 34ch; margin: 24px 0; }
+.cover-photo { width: 100%; height: 100%; min-height: 350px; max-height: 490px; object-fit: cover; }
+.index { margin-top: 18px; }
+.index a { display: grid; grid-template-columns: 40px 1fr 1fr 32px; gap: 18px; align-items: center; min-height: 70px; padding: 9px 6px; text-decoration: none; border-top: 1px solid var(--rule); }
+.index a:hover { background: #efefe9; }
+.index p { color: var(--quiet); font-size: 14px; margin: 0; }
+.index h2 { font-size: clamp(20px,2vw,30px); }
+.index-icon { display: grid; place-items: center; width: 35px; height: 35px; background: #e4e9ff; border-radius: 50%; color: #2440a1; }
+.index a:nth-child(2) .index-icon { background: #d9ebe3; color: #155947; }
+.index a:nth-child(3) .index-icon { background: #ffe7a3; color: #754d18; }
+svg { width: 19px; height: 19px; }
+.desk-layout { display: grid; grid-template-columns: 1.35fr 1fr; min-height: 590px; border: 1px solid var(--rule); }
+.conversation,.source { padding: clamp(24px,3.8vw,58px); }
+.conversation { background: white; }
+.conversation h1 { font-size: clamp(36px,3.6vw,56px); }
+.thread { margin: 34px 0 25px; }
+.speaker { display: block; font-weight: 500; font-size: 12px; color: var(--quiet); }
+.thread p { margin: 6px 0 22px; }
+.thread h2 { font-size: 22px; margin: 8px 0; }
+.assistant { color: var(--accent); }
+#ask { display: flex; align-items: center; gap: 8px; padding: 7px; border: 1px solid #aab6cc; border-radius: 5px; }
+#ask input { border: 0; flex: 1; min-width: 0; }
+#ask+.actions { margin-top: 10px; }
+#ask+.actions button { font-size: 12px; min-height: 32px; padding: 4px 8px; }
+.source { background: #e9ecf4; }
+.paper { background: #fffef8; box-shadow: none; padding: 28px; margin-top: 22px; }
+.paper h2 { font-weight: 300; }
+.paper p { color: var(--quiet); font-size: 14px; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 22px 0; }
+blockquote { margin: 16px 0 24px; border-left: 2px solid #c8a7ba; padding: 6px 14px; background: #f7f0f4; }
+.hero { padding: 22px 0 28px; border-bottom: 1px solid var(--ink); }
+.hero p:last-child { margin-bottom: 0; }
+.grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: clamp(24px,4vw,64px); margin-top: 26px; }
+.grid>div { min-width: 0; }
+.panel { padding: 10px 0; }
+.row { border-top: 1px solid var(--rule); padding-top: 16px; margin-top: 18px; }
+.tag { display: inline-block; font: 12px/1.4 Menlo,monospace; color: var(--quiet); margin: 14px 0 0; }
+.info { padding: 14px; border-left: 3px solid #4a947c; background: #e8f1eb; color: #193e30; margin-top: 14px; }
+.info p { margin: 5px 0 0; }
+label { display: block; font-weight: 450; margin: 16px 0 6px; }
+input,select { padding: 10px; max-width: 100%; background: white; color: #202022; border: 1px solid var(--rule); border-radius: 3px; }
+[data-route="guide"],[data-route="connector"] { background: #142322; color: #e9f3eb; --ink: #eef5ef; --quiet: #adbbb4; --rule: #3c504d; --accent: #b9e9c9; }
+[data-route="guide"] .hero h1,[data-route="connector"] h1 { font-weight: 300; letter-spacing: -.032em; }
+[data-route="guide"] .grid { grid-template-columns: .95fr 1.2fr; gap: 0; }
+[data-route="guide"] .grid>div:first-child { grid-column: 2; grid-row: 1; padding: 10px 0 15px 8%; border-left: 1px solid var(--rule); }
+[data-route="guide"] .grid>div:last-child { grid-column: 1; grid-row: 1; padding-right: 9%; }
+[data-route="guide"] button,[data-route="connector"] button { color: #183328; background: #b9e9c9; border-color: #b9e9c9; }
+[data-route="guide"] .secondary { color: #eaf3ec; background: transparent; border-color: #84958b; }
+.timeline { list-style: none; padding: 0; margin: 18px 0; }
+.timeline li { display: grid; grid-template-columns: 100px 1fr; border-top: 1px solid var(--rule); padding: 9px 0; font-weight: 450; font-size: 14px; }
+.timeline small { font: 11px/1.8 Menlo,monospace; color: var(--quiet); }
+.brief-cover { display: grid; grid-template-columns: 1fr 1fr; background: #ffde56; }
+.brief-cover img { width: 100%; height: 300px; object-fit: cover; }
+.shiftHero { padding: clamp(24px,3.2vw,48px); border: 0; align-self: center; }
+.shiftHero h1 { font: 300 clamp(38px,4vw,58px)/1.06 "Helvetica Neue",Arial,sans-serif; letter-spacing: -.07em; }
+.brief-progress { display: flex; justify-content: space-between; font-size: 12px; max-width: 360px; }
+progress { width: min(360px,100%); accent-color: #202022; height: 7px; }
+[data-route="shift"] .grid>div:last-child { border-left: 1px solid var(--rule); padding-left: 8%; }
+[data-route="shift"] .panel .actions { margin-top: 15px; }
+@media(max-width:760px) {
+  .mast { display: block; padding-top: 12px; }
+  nav { overflow-x: auto; gap: 15px; }
+  nav a { white-space: nowrap; padding: 9px 0; font-size: 12px; }
+  main { padding: 20px 0; }
+  .front,.desk-layout,.grid,.brief-cover,[data-route="guide"] .grid { grid-template-columns: 1fr; }
+  .cover-photo { min-height: 0; height: 190px; }
+  .index a { grid-template-columns: 35px 1fr 24px; gap: 10px; }
+  .index p { grid-column: 2; grid-row: auto; }
+  .index strong { grid-column: 3; grid-row: 1 / 3; }
+  .index-icon { grid-row: span 2; }
+  .desk-layout { min-height: 0; }
+  .paper { margin-top: 12px; }
+  [data-route="guide"] .grid>div:first-child,[data-route="guide"] .grid>div:last-child { grid-row: auto; grid-column: auto; padding: 0; border: 0; }
+  .brief-cover img { height: 185px; }
+  [data-route="shift"] .grid>div:last-child { padding: 16px 0 0; border-left: 0; border-top: 1px solid var(--rule); }
+  footer { flex-wrap: wrap; }
+}
+
+/* Keep the conversation on the canvas and the selected source in view. */
+.desk-layout { border: 0; grid-template-columns: minmax(0,1.55fr) minmax(0,1fr); gap: clamp(20px,4vw,72px); }
+.conversation { background: transparent; padding: 8px 0; }
+.conversation h1 { font-weight: 300; letter-spacing: -.032em; }
+.thread { max-height: 45vh; overflow-y: auto; padding-right: 9px; scrollbar-width: thin; }
+.exchange + .exchange { margin-top: 30px; border-top: 1px solid var(--rule); padding-top: 16px; }
+.thread .user-prompt { margin: 0 0 22px auto; padding: 10px 16px; background: #f2f2f4; border-radius: 15px 15px 3px 15px; width: fit-content; }
+.thread h2 { font-size: 18px; letter-spacing: -.02em; }
+.thread p { margin-bottom: 12px; }
+.citation { background: transparent; color: #314ca3; border: 0; min-height: 28px; padding: 2px 0; font-size: 12px; }
+.citation[aria-pressed=true] { text-decoration: underline; text-underline-offset: 4px; }
+.source { align-self: start; border-left: 1px solid var(--rule); padding: 10px 0 30px clamp(18px,3vw,42px); background: transparent; }
+.paper { background: #fff; border: 1px solid var(--rule); }
+#ask { background: white; }
+@media(max-width:760px){
+  .desk-layout { grid-template-columns: 1fr; }
+  .source { border-left: 0; border-top: 1px solid var(--rule); padding: 20px 0; }
+}
+
+/* A quiet navigation column leaves the working canvas to the case and its evidence. */
+@media(min-width: 940px) {
+  #app { display: grid; grid-template-columns: 195px minmax(0,1fr); min-height: 100vh; grid-template-rows: 1fr auto; }
+  .mast { margin: 0; grid-row: span 2; align-self: stretch; display: block; width: 100%; padding: 29px 13px; border: 0; border-right: 1px solid var(--rule); background: #f8f8f9; color: #27272b; }
+  .brand { display: block; font-size: 18px; padding: 0 9px; }
+  nav { display: grid; gap: 4px; margin-top: 36px; }
+  nav a { display: flex; align-items: center; gap: 10px; border: 0; border-radius: 6px; padding: 9px 12px; color: #56565d; font-size: 14px; }
+  nav a:hover,nav [aria-current] { background: #eaeaec; color: #242428; }
+  main { padding-top: 44px; }
+  footer { grid-column: 2; }
+}
+nav svg { width: 15px; height: 15px; }
+@media(max-width:939px) { nav svg { display: none; } }
+.thread h2,.paper h3 { font-weight: 450; }
+.paper small { color: #66666d; }
+[data-route="guide"] .mast,[data-route="connector"] .mast { border-color: #d6d6d9; }
+
+.handoff { margin: 20px 0 8px; }
+details { border-top: 1px solid var(--rule); padding: 12px 0 0; }
+summary { cursor: pointer; color: var(--accent); font-size: 14px; }
+[data-route="guide"],[data-route="connector"] { background: #f9faf9; color: #202022; --ink:#202022; --quiet:#56605a; --rule:#d8dfda; --accent:#225645; }
+[data-route="guide"] .secondary { color:#214438; border-color:#acbcb2; }
+
+[data-route="connector"] select {
+  appearance: none;
+  width: min(100%, 24rem);
+  min-height: 44px;
+  padding: 10px 42px 10px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%2356605a' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+}
+@media (forced-colors: active) { [data-route="connector"] select { appearance: auto; } }
+.call-context { color: var(--quiet); margin: 8px 0 20px; }
+.thread { max-height: none; padding: 0; }
+.thread.has-followups { max-height: 62vh; }
+.exchange + .exchange { border: 0; padding: 0; margin-top: 18px; }
+.chat-message { width: fit-content; max-width: 88%; padding: 12px 16px; }
+.chat-message .speaker { display: block; font-size: 13px; font-weight: 550; }
+.chat-message p { margin: 5px 0 0; }
+.agent-message { margin: 0 0 10px auto; background: #edf2ff; border-radius: 14px 14px 3px 14px; }
+.agent-message .speaker { color: #294e97; }
+.thread .agent-message .user-prompt { background: transparent; margin: 5px 0 0; padding: 0; }
+.knowledge-message { border: 1px solid var(--rule); border-radius: 3px 14px 14px; background: white; }
+.knowledge-message .speaker { color: #245e46; }
+.knowledge-message .citation { margin-top: 5px; }
+.thread:empty { display: none; }
+.tree-paths { list-style: none; padding: 0 0 0 16px; margin: 12px 0 20px; border-left: 1px solid var(--rule); }
+.tree-path { position: relative; margin: 12px 0; padding: 12px 15px; border: 1px solid var(--rule); border-radius: 6px; }
+.tree-path::before { content: ''; position: absolute; left: -17px; top: 25px; width: 16px; border-top: 1px solid var(--rule); }
+.tree-path.recommended { border-color: #9bbcae; background: #eff7f2; }
+.tree-path small { color: var(--quiet); font-size: 12px; }
+.tree-path h3 { margin: 4px 0; }
+.tree-path p { margin: 6px 0 10px; }
+
+.stage { max-width: 1100px; margin: auto; }
+.stage h1 { font-size: clamp(34px,4vw,55px); font-weight: 300; }
+.stage header { margin-bottom: 24px; border-bottom: 1px solid var(--rule); padding-bottom: 18px; }
+.stage h2 { font-size: 24px; margin: 8px 0 14px; }
+.stage p { margin: 8px 0 14px; }
+.columns { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr); gap: clamp(18px,3vw,44px); }
+.sheet { padding: 20px; border: 1px solid var(--rule); background: white; }
+.sheet + .sheet { margin-top: 14px; }
+.meta { color: var(--quiet); font-size: 13px; }
+.rule { border-left: 3px solid #7191c6; padding-left: 12px; }
+.stage details { margin: 14px 0; }
+.stage summary { font-weight: 500; }
+.stage select { display:block; width:min(100%,22rem); height:44px; padding:8px 12px; margin-bottom:12px; }
+.stage .actions { margin: 12px 0; }
+.stage .thread { max-height: none; overflow: visible; margin: 0 0 10px; }
+.stage .exchange { margin-bottom: 14px; }
+.stage .thread p { margin: 5px 0; }
+.stage .chat-message { padding: 10px 14px; }
+.stage .chat-message .speaker { margin-bottom: 4px; }
+.stage .handoff { margin: 24px 0; }
+.stage table { width:100%; border-collapse:collapse; font-size:14px; text-align:left; }
+.stage td,.stage th { padding:10px 4px; border-bottom:1px solid var(--rule); vertical-align:top; }
+.stage th { font-weight:500; }
+@media(max-width:760px){ .columns { grid-template-columns:1fr; } .sheet { padding:14px; } }
+.tree-options {display:grid; gap:8px; margin-top:16px;}
+.tree-options button {justify-content:space-between; text-align:left; color:var(--ink); background:white; border-color:var(--rule);}
+.tree-options button:hover {background:#eff5f1; border-color:#9cbbaa;}
+.tree-trail {font-size:13px; color:var(--quiet);}
+[data-route="desk"] .stage { width:100%; max-width:none; padding:0; margin:0; display:flex; flex-direction:column; min-width:0; }
+[data-route="desk"] footer { display:none; }
+.stage .chat-bar { display:flex; align-items:center; justify-content:space-between; padding:14px clamp(16px,3vw,44px); margin:0; border:0; }
+.stage .chat-bar h1 { font-size:20px; font-weight:450; letter-spacing:-.035em; margin:0; }
+.chat-bar button, .chat-dialog .close { background:transparent; color:var(--quiet); border:1px solid var(--rule); border-radius:22px; font-size:13px; padding:5px 13px; min-height:34px; }
+.stage .thread, .chat-compose { width:min(760px,calc(100% - 36px)); margin-inline:auto; }
+.stage .thread { padding:16px 0; margin-block:0; overflow-wrap:anywhere; }
+.stage .exchange { margin:0; }
+.stage .exchange + .exchange { margin-top:20px; }
+.stage .chat-message { padding:0; font-size:16px; line-height:1.5; }
+.stage .agent-message { background:#ecf4fc; padding:9px 16px; margin:0 0 14px auto; border-radius:18px; }
+.stage .knowledge-message { border:0; }
+.stage .chat-message .speaker { font-size:12px; margin:0; }
+.stage .thread p { margin:2px 0; }
+.stage .citation { margin:0; min-height:24px; }
+.chat-compose { padding:8px 0 16px; }
+.chat-compose .actions { margin:0 0 5px; }
+.chat-compose .actions button { background:none; border:0; color:var(--quiet); min-height:28px; font-size:13px; padding:2px 8px; }
+.chat-compose #ask { border-radius:28px; padding:5px 6px 5px 16px; border-color:#d7d9dd; box-shadow:0 2px 10px #10182809; }
+.chat-compose #ask:has(input:focus) { border-color:#68798c; box-shadow:0 0 0 1px #68798c; }
+.chat-compose #ask input:focus { outline:none; }
+@media (forced-colors:active) {
+  .chat-compose #ask:has(input:focus) { outline:2px solid Highlight; outline-offset:1px; }
+}
+.chat-compose #ask button { border-radius:50%; width:38px; min-height:38px; padding:0; font-size:20px; }
+.chat-dialog { width:min(460px,92vw); max-height:85dvh; overflow:auto; border:1px solid var(--rule); border-radius:16px; padding:24px; color:var(--ink); }
+.chat-dialog::backdrop { background:#17233244; }
+.chat-dialog .close { float:right; }
+.chat-dialog .sheet { padding:10px 0; border:0; }
+@media(min-width:940px) and (min-height:600px){
+  [data-route="desk"] #app { height:100dvh; grid-template-rows:minmax(0,1fr); }
+  [data-route="desk"] .mast { grid-row:1; }
+  [data-route="desk"] .stage { height:100%; min-height:0; }
+  .stage .thread { flex:1; min-height:0; overflow-y:auto; }
+}
+.workspace-nav nav { display:block; margin:0; overflow:visible; }
+.workspace-nav h2 { font-size:13px; line-height:1.4; font-weight:500; letter-spacing:normal; color:var(--quiet); margin:0 12px 6px; }
+.workspace-nav .nav-links { display:grid; gap:3px; }
+.workspace-nav { margin-top:32px; }
+.workspace-nav nav + nav { border-top:1px solid var(--rule); padding-top:18px; margin-top:18px; }
+@media(max-width:939px) {
+  .mast { display:block; padding-block:12px; }
+  .workspace-nav { margin-top:12px; }
+  .workspace-nav h2 { margin:0; font-size:12px; }
+  .workspace-nav .nav-links { display:flex; flex-wrap:wrap; gap:0 15px; }
+  .workspace-nav nav + nav { margin-top:5px; padding-top:7px; }
+  .workspace-nav a { padding:5px 0; }
+}
+/* Option 1 refinements: one type scale, visible state, sources on answers. */
+.stage header .kicker { margin-bottom:6px; }
+.stage h1 { font-size:clamp(28px,2.6vw,36px); font-weight:400; letter-spacing:-.03em; }
+.stage header { margin-bottom:20px; padding-bottom:14px; }
+.stage header p { margin-bottom:0; }
+@media(min-width:940px){ #app { grid-template-columns:224px minmax(0,1fr); } main.stage { padding-top:32px; margin-top:0; align-self:start; } [data-route="desk"] .mast { overflow-y:auto; } }
+.columns { align-items:start; }
+.columns > .sheet + .sheet, .columns > section + section { margin-top:0; }
+.live-badge { display:inline-flex; align-items:center; gap:6px; margin:10px 9px 0; font-size:12px; color:#46464c; border:1px solid var(--rule); border-radius:999px; padding:2px 10px; background:#fff; }
+.live-badge::before { content:''; width:7px; height:7px; border-radius:50%; background:#2f9e6a; }
+.tour { margin-top:22px; border-top:1px solid var(--rule); padding-top:14px; }
+.tour summary { font-size:13px; font-weight:500; color:var(--quiet); padding:0 12px; }
+.tour ol { list-style:none; margin:6px 0 0; padding:0; display:grid; gap:1px; }
+.tour a { display:grid; grid-template-columns:18px 1fr; gap:8px; align-items:start; padding:5px 12px; font-size:13px; line-height:1.35; color:#46464c; text-decoration:none; border-radius:6px; }
+.tour a:hover { background:#eaeaec; }
+.tour .n { width:18px; height:18px; border-radius:50%; border:1px solid #b9b9c0; display:grid; place-items:center; font-size:10px; }
+.tour .done .n { background:#2f9e6a; border-color:#2f9e6a; color:#fff; }
+.tour .done .t { color:var(--quiet); }
+.chat-bar .call-meta { display:block; font-size:12px; color:var(--quiet); margin-top:2px; }
+.chat-compose .suggestions { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 10px; }
+.chat-compose .suggestions button { background:#fff; color:#3b3b41; border:1px solid var(--rule); border-radius:999px; min-height:30px; padding:3px 12px; font-size:13px; font-weight:400; }
+.chat-compose .suggestions button:hover { background:#f3f5f8; filter:none; }
+.sources { display:flex; flex-wrap:wrap; gap:4px 16px; }
+.facts { width:100%; border-collapse:collapse; font-size:14px; margin:8px 0 4px; }
+.facts td { padding:6px 0; border-bottom:1px solid var(--rule); vertical-align:top; }
+.facts td:last-child { text-align:right; color:var(--quiet); font-size:12px; }
+.chg { background:#fff1c2; padding:0 3px; border-radius:3px; font-weight:500; }
+.old { text-decoration:line-through; text-decoration-color:#b0b0b6; }
+.stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:16px; }
+.stat { border:1px solid var(--rule); padding:14px 16px; }
+.stat strong { display:block; font-size:26px; font-weight:400; letter-spacing:-.03em; }
+.stat small { font-size:13px; color:var(--quiet); letter-spacing:0; white-space:nowrap; }
+.stat span { font-size:13px; color:var(--quiet); }
+.stage tr.you td { background:#f3f6fd; }
+.status-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#2f9e6a; margin-right:6px; vertical-align:middle; }
+.status-dot.off { background:#c3c3c9; }
+.stage code { font:12px/1.5 Menlo,monospace; background:#f3f3f5; padding:1px 5px; border-radius:3px; }
+@media(max-width:760px){ .stats { gap:8px; } .stat { padding:10px; } .stat strong { font-size:19px; } .stat span { font-size:12px; line-height:1.3; display:block; } .stage table { font-size:13px; } .table-wrap { overflow-x:auto; } }
+@media(max-width:939px){
+  .mast { border-bottom:1px solid var(--rule); padding-bottom:4px; }
+  .workspace-nav .nav-links { gap:0 18px; }
+  .workspace-nav a { min-height:40px; display:inline-flex; align-items:center; padding:0; }
+  .workspace-nav nav + nav { padding-top:8px; }
+  .tour { margin-top:4px; padding-top:0; border-top:1px solid var(--rule); }
+  .tour summary { padding:10px 0; min-height:40px; }
+  .tour a { padding:8px 0; min-height:40px; }
+  .stage .citation { min-height:36px; }
+  .chat-compose .suggestions button { min-height:38px; }
+}
+.skip-sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+</style></head>
+<body>
+  <a class="skip" href="#workspace-main">Skip to content</a>
+  <div id="app"></div>
+  <script>
+const app = document.querySelector('#app');
+const screens = {desk:'Agent workspace',studio:'Review & publish',shift:'Morning briefing',practice:'Practice call',report:'Team report',connectors:'Connectors'};
+const rules = {
+  1:{min:500},
+  2:{min:1000}
+};
+const creditRule = 'Cashback is credited within 7 days of delivery.';
+const state = {version:1, review:'pending', clarified:false, read:new Set(), attempts:[], history:[], field:'paid_amount', turns:[], selected:0, visited:new Set(), newCallV2:false, tourOpen:matchMedia('(min-width:940px)').matches};
+const example = {paid_amount:850, list_price:1100, payment_method:'UPI', delivered:'14 Nov', cashback:'Not credited'};
+const teams = [
+  {name:'Payments & refunds', agents:48, results:{1:[46,43],2:[21,17]}},
+  {name:'Offers & cashback', agents:36, results:{1:[35,33],2:[14,11]}},
+  {name:'Night shift', agents:22, results:{1:[20,18],2:[3,2]}}
+];
+const totalAgents = teams.reduce((n,t)=>n+t.agents,0);
+const revision = v => 'v'+v+'.0';
+const money = n => '₹'+n.toLocaleString('en-IN');
+const eligible = v => example.paid_amount >= rules[v].min;
+const now = () => new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:false});
+const link = (id,text) => '<a class="link" href="#'+id+'">'+text+'</a>';
+const button = (action,text,secondary=false) => '<button type="button" data-action="'+action+'" class="'+(secondary?'secondary':'')+'">'+text+'</button>';
+const intro = (section,title,description) => '<header><span class="kicker">'+section+'</span><h1>'+title+'</h1><p>'+description+'</p></header>';
+const handoff = (id,text) => '<div class="handoff">'+link(id,text+' →')+'</div>';
+const ruleText = (v,amount=money(rules[v].min)) => 'Pay by UPI and spend at least '+amount+' after discounts to earn ₹50 cashback.';
+const policy = v => '<p class="rule">'+ruleText(v)+' '+creditRule+'</p>';
+const tip = '<span class="meta">Sample offer · Weekend UPI cashback</span>';
+function answer(turn){
+  const v=turn.version, min=money(rules[v].min);
+  if(turn.kind==='unknown') return 'I couldn’t find that in the approved offer terms. Try one of the suggested questions below, or check with your team lead.';
+  if(turn.kind==='check') return 'Check the offer version on the order, how the customer paid, and the amount they paid after discounts.';
+  if(turn.kind==='card') return 'No. This offer applies to UPI payments only. A card payment doesn’t qualify, whatever the amount.';
+  if(turn.kind==='timing') return 'Cashback is credited within 7 days of delivery. FK-8042 was delivered on 14 Nov, so it was due by 21 Nov. It still shows as not credited, so ask the payments team to check it.';
+  if(turn.kind==='script') return eligible(v)
+    ? 'You can say, “Your ₹850 UPI payment meets this offer’s '+min+' minimum. I’ll check why your cashback hasn’t arrived.”'
+    : 'You can say, “The minimum for this offer is '+min+' after discounts. You paid ₹850, so this order doesn’t qualify for the ₹50 cashback.”';
+  return eligible(v) ? 'Yes. The customer paid ₹850 by UPI. That meets the '+min+' minimum. Check the cashback status next.' : 'No. The customer paid ₹850 after discounts. The minimum is '+min+'.';
+}
+function classify(text){
+  const t=text.toLowerCase();
+  if(/\b(say|tell|word|script|explain to)/.test(t)) return 'script';
+  if(/\b(card|debit|credit card|wallet|cod|cash on|emi|net ?banking)/.test(t)) return 'card';
+  if(/\b(when|how long|days|arrive|delay|late|timeline)/.test(t)) return 'timing';
+  if(/(qualif|eligib|minimum|valid|get (the )?cashback|850)/.test(t)) return 'eligibility';
+  if(/\b(check|look|verify|start|first)/.test(t)) return 'check';
+  return 'unknown';
+}
+const suggestions = [['script','What should I say?'],['card','What if they paid by card?'],['timing','When should the cashback arrive?']];
+function orderSource(kind){
+  if(kind==='timing') return '<button class="citation" data-open-order aria-haspopup="dialog">Not credited · Rewards ledger ↗</button>';
+  if(kind==='eligibility'||kind==='script') return '<button class="citation" data-open-order aria-haspopup="dialog">Paid ₹850 · Orders · FK-8042 ↗</button>';
+  return '';
+}
+function startCase(){
+  state.turns=[
+    {question:'A customer is on the phone about missing cashback. What should I check?',kind:'check',version:state.version},
+    {question:'They paid ₹850 by UPI after discounts. Does this order qualify?',kind:'eligibility',version:state.version}
+  ];
+  state.selected=1;
+}
+startCase();
+function agent(){
+  const selected=state.turns[state.selected];
+  const callVersion=state.turns[0].version;
+  const conversation=state.turns.map((t,i)=>`<article class="exchange">
+    <div class="chat-message agent-message"><span class="speaker">Support agent</span><p class="question"></p></div>
+    <div class="chat-message knowledge-message"><span class="speaker">Knowledge base</span><p>${answer(t)}</p>
+    <div class="sources"><button class="citation" data-turn="${i}" aria-haspopup="dialog">${t.kind==='unknown'?'Check policy coverage':'Offer terms · '+revision(t.version)} ↗</button>${orderSource(t.kind)}</div></div></article>`).join('');
+  const asked=new Set(state.turns.map(t=>t.kind));
+  const chips=suggestions.filter(([k])=>!asked.has(k)).map(([k,q])=>`<button type="button" data-suggest="${k}">${q}</button>`).join('');
+  return `<header class="chat-bar"><div><h1>Where’s my cashback?</h1><span class="call-meta">Order FK-8042 · Offer ${revision(callVersion)}${callVersion<state.version?' (the order was placed before '+revision(state.version)+')':''}</span></div><button data-open-order aria-haspopup="dialog">Order details</button></header>
+    <div class="thread" tabindex="0" aria-label="Sample conversation">${conversation}</div>
+    <div class="chat-compose">${chips?'<div class="suggestions" aria-label="Suggested questions">'+chips+'</div>':''}
+    <form id="ask"><input name="question" required aria-label="Ask the knowledge base" placeholder="Ask the knowledge base"><button aria-label="Send question">↑</button></form></div>
+    <dialog class="chat-dialog" aria-labelledby="terms-title"><button class="close" data-close>Close</button><div class="sheet">${tip}<h2 id="terms-title">Approved offer terms</h2><p class="meta">Offers team · ${revision(selected.version)}</p>
+    <div id="turn-policy">${policy(selected.version)}</div></div>
+    <details class="sheet"><summary>Order details from connectors</summary><p class="meta">Sample data. Not connected to Flipkart systems.</p>
+    <table class="facts"><tbody>
+      <tr><td>Order</td><td>FK-8042 · Offer ${revision(callVersion)}</td><td>Orders</td></tr>
+      <tr><td>List price</td><td>${money(example.list_price)}</td><td>Orders</td></tr>
+      <tr><td>Paid after discounts</td><td>${money(example.paid_amount)}</td><td>Orders</td></tr>
+      <tr><td>Payment method</td><td>${example.payment_method}</td><td>Payments</td></tr>
+      <tr><td>Delivered</td><td>${example.delivered}</td><td>Orders</td></tr>
+      <tr><td>Cashback</td><td>${example.cashback}</td><td>Rewards ledger</td></tr>
+    </tbody></table>
+    <label for="source">Order field for checking the minimum spend</label><select id="source"><option value="paid_amount">Amount paid after discounts</option><option value="list_price">List price before discounts</option></select><p id="mapping" role="status"></p>
+    ${link('connectors','See all connectors →')}</details>
+    ${state.version===2?handoff('practice','Practise this offer rule'):handoff('studio','Review the offer change')}</dialog>`;
+}
+function review(){
+  const done=state.version===2;
+  const history=[['10:12','Meera submitted v2.0 for review.'],...state.history];
+  return intro('Content admins','Review the cashback offer','Meera from the offers team drafted this change. Arjun is the reviewer.')+
+    `<div class="columns"><section class="sheet">${tip}<h2>Minimum spend</h2>
+    <p class="meta">Current · v1.0</p><p class="rule">${ruleText(1,'<span class="old">₹500</span>')}</p>
+    <p class="meta">${done?'Published':'Proposed'} · v2.0</p><p class="rule">${ruleText(2,'<span class="chg">₹1,000</span>')}</p>
+    <p>The cashback stays at ₹50. ${state.clarified||done?'The new minimum applies to orders placed after v2.0 is published.':''}</p>
+    <p class="meta">Goes to ${totalAgents} agents in ${teams.length} teams once published.</p>
+    <div class="actions">${done?'<p role="status">Published by Arjun.</p>':state.review==='pending'?button('publish','Approve and publish')+button('return','Send back to author',true):'<p>Arjun asked Meera to say which orders the new minimum applies to.</p>'+button('resubmit','Resubmit with start rule')}</div></section>
+    <section><h2>Review history</h2><table><tbody>${history.map(([t,e])=>'<tr><td class="meta" style="width:56px">'+t+'</td><td>'+e+'</td></tr>').join('')}</tbody></table>
+    ${handoff('shift','Open the morning briefing')}</section></div>`;
+}
+function briefing(){
+  const v=state.version;
+  return intro('Support agents','Today’s offer update',v===2?'The offers team has published a new minimum spend.':'The current offer is below. A change is waiting for review.')+
+    `<div class="columns"><section class="sheet">${tip}<h2>${v===2?'The minimum spend is now ₹1,000':'The minimum spend is ₹500'}</h2>${policy(v)}
+    <p class="meta">Published version · ${revision(v)}</p>${state.read.has(v)?'<p role="status">You marked this update as read.</p>':button('read','Mark as read')}
+    ${v===1?'<p class="meta">Content admins: '+link('studio','review the proposed change')+'</p>':''}</section>
+    <section><h2>Use the update</h2><p>Try a sample call about an ₹850 UPI order under ${revision(v)}.</p>${button('newcall','Open sample call')}
+    ${handoff('practice','Answer the check')}</section></div>`;
+}
+const treePath = [];
+function decisionTree(){
+  const minimum=money(rules[state.version].min);
+  const nodes={
+    payment:{title:'How did the customer pay?',choices:[['UPI','amount'],['Card or another method','other'],['Payment method unknown','receipt']]},
+    amount:{title:'How much did they pay after discounts?',choices:[['At least '+minimum,'cashback'],['Less than '+minimum,'below'],['Amount unknown','amountCheck']]},
+    cashback:{title:'What does the cashback status show?',choices:[['Credited','credited'],['Missing','missing'],['Status unavailable','statusCheck']]},
+    other:{title:'Explain the payment rule',text:'This offer applies to UPI payments only.'},
+    receipt:{title:'Check the payment method',text:'Open the payment details before deciding whether the order qualifies.'},
+    below:{title:'Explain the minimum spend',text:'The customer paid less than '+minimum+' after discounts, so this order does not qualify.'},
+    amountCheck:{title:'Check the final amount',text:'Find the amount paid on the receipt, then return to the spend question.'},
+    credited:{title:'Show the customer the credit',text:'Confirm the ₹50 cashback entry with the customer.'},
+    missing:{title:'Check the missing credit',text:'The order meets the offer terms. Ask the payments team to check why the ₹50 credit is missing.'},
+    statusCheck:{title:'Confirm the cashback status',text:'Check the payment record before telling the customer that the cashback has arrived.'}
+  };
+  let node=nodes.payment;
+  const trail=[];
+  for(const choice of treePath){
+    const [label,next]=node.choices[choice];
+    trail.push(label);node=nodes[next];
+  }
+  return `<section class="sheet" aria-label="Interactive decision tree"><p class="meta">Decision tree · ${revision(state.version)}</p>
+    ${trail.length?'<p class="tree-trail">'+trail.join(' → ')+'</p>':''}
+    <h2 tabindex="-1" id="tree-question">${node.title}</h2>
+    ${node.choices?`<div class="tree-options">${node.choices.map(([label],i)=>`<button type="button" data-branch="${i}">${label} <span aria-hidden="true">→</span></button>`).join('')}</div>`:'<p role="status">'+node.text+'</p>'}
+    ${trail.length?'<div class="actions">'+button('tree-back','Back one step',true)+button('tree-reset','Start again',true)+'</div>':''}</section>`;
+}
+function practice(){
+  const v=state.version;
+  const last=state.attempts.filter(a=>a.version===v).at(-1);
+  return intro('Support agents','Cashback decision tree','Choose a payment method to start. Each answer leads to the next question or a suggested action.')+
+    `<div class="columns">${decisionTree()}<section class="sheet"><p class="meta">Knowledge check · Sample order · ${revision(v)}</p><h2>Does this order qualify?</h2>
+    <p>The list price was ₹1,100. The customer used a discount and paid ₹850 by UPI.</p><div class="actions">${button('yes','Yes, it qualifies',true)}${button('no','No, it falls short',true)}</div>
+    ${last?`<div class="info" role="status"><strong>${last.correct?'Correct.':'Try again.'}</strong> Compare the ₹850 payment with the ${money(rules[v].min)} minimum.</div>`:''}${handoff('report','See the team report')}</section></div>`;
+}
+function versionReport(v){
+  const mine=state.attempts.filter(a=>a.version===v);
+  const you={read:state.read.has(v)?1:0, correct:mine.some(a=>a.correct)?1:0};
+  const rows=teams.map(t=>({name:t.name,agents:t.agents,read:t.results[v][0],correct:t.results[v][1]}));
+  const sum=k=>rows.reduce((n,r)=>n+r[k],0);
+  const read=sum('read')+you.read, correct=sum('correct')+you.correct, agents=totalAgents+1;
+  const followUp=rows.reduce((n,r)=>n+(r.read-r.correct),0)+Math.max(0,you.read-you.correct);
+  const cells=r=>`<td>${r.agents}</td><td>${r.read}</td><td>${r.correct}</td><td>${Math.max(0,r.read-r.correct)}</td>`;
+  return `<section class="sheet"><h2>Offer ${revision(v)}${v===state.version?' · current':''}</h2>
+    <div class="stats"><div class="stat"><strong>${read}<small> of ${agents}</small></strong><span>read the update</span></div>
+    <div class="stat"><strong>${correct}</strong><span>answered the check correctly</span></div>
+    <div class="stat"><strong>${followUp}</strong><span>read it but answered wrong</span></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Team</th><th>Agents</th><th>Read</th><th>Correct</th><th>Follow up</th></tr></thead><tbody>
+    ${rows.map(r=>'<tr><td>'+r.name+'</td>'+cells(r)+'</tr>').join('')}
+    <tr class="you"><td>You, in this demo (${mine.length} ${mine.length===1?'attempt':'attempts'})</td>${cells({agents:1,...you})}</tr></tbody></table></div></section>`;
+}
+function report(){
+  return intro('Team managers','Team report','Reading an update and answering the check correctly are counted separately.')+
+    [2,1].filter(v=>v<=state.version).map(versionReport).join('<div style="height:14px"></div>')+
+    `<p class="meta">Team rows are sample data. Your row updates as you use the demo and resets when you refresh.</p>${handoff('studio','Review offer history')}`;
+}
+function connectors(){
+  const list=[
+    ['Orders','order_id, list_price, paid_amount, delivered_on','Synced 2 min ago',true],
+    ['Payments','payment_method, upi_status','Synced 2 min ago',true],
+    ['Rewards ledger','cashback_status, credited_on','Synced 5 min ago',true],
+    ['Support desk','ticket_id, customer_query','Not connected',false]
+  ];
+  return intro('Content admins','Connectors','Connectors bring order and payment facts into answers, so agents don’t have to look them up.')+
+    `<div class="columns"><section class="sheet"><h2>Connected systems</h2><div class="table-wrap"><table><thead><tr><th>System</th><th>Fields used</th><th>Status</th></tr></thead><tbody>
+    ${list.map(([n,f,s,on])=>`<tr><td>${n}</td><td><code>${f}</code></td><td><span class="status-dot${on?'':' off'}"></span>${s}</td></tr>`).join('')}</tbody></table></div>
+    <p class="meta">Sample connectors. They aren’t connected to any Flipkart system.</p></section>
+    <section class="sheet"><h2>Map the offer rule to an order field</h2><p>The cashback rule needs the amount the customer paid after discounts.</p>
+    <label for="source">Order field for checking the minimum spend</label><select id="source"><option value="paid_amount">Amount paid after discounts</option><option value="list_price">List price before discounts</option></select>
+    <p class="meta">Test with sample order FK-8042</p><p id="mapping" role="status"></p>${handoff('desk','See it in an agent answer')}</section></div>`;
+}
+const views={desk:agent,studio:review,shift:briefing,practice,report,connectors};
+const navigationGroups = [
+  {label:'Support agents', routes:['desk','shift','practice']},
+  {label:'Content admins & team managers', routes:['studio','report','connectors']}
+];
+function workspaceNavigation(route){
+  return navigationGroups.map(({label,routes}) => {
+    const links = routes.map(id => `<a href="#${id}" ${id===route?'aria-current="page"':''}>${screens[id]}</a>`).join('');
+    return `<nav aria-label="${label}"><h2>${label}</h2><div class="nav-links">${links}</div></nav>`;
+  }).join('');
+}
+function tour(){
+  const steps=[
+    ['desk','Ask about ₹850 order',state.visited.has('desk')],
+    ['studio','Publish ₹1,000 minimum',state.version===2],
+    ['shift','Read the briefing',state.read.has(2)],
+    ['shift','Open a new call',state.newCallV2],
+    ['practice','Answer the check',state.attempts.some(a=>a.version===2)],
+    ['report','See the report',state.visited.has('report')&&state.version===2]
+  ];
+  return `<details class="tour"${state.tourOpen?' open':''}><summary>Try this</summary><ol>${steps.map(([id,text,done],i)=>
+    `<li class="${done?'done':''}"><a href="#${id}"><span class="n" aria-hidden="true">${done?'✓':i+1}</span><span class="t">${text}${done?'<span class="skip-sr"> (done)</span>':''}</span></a></li>`).join('')}</ol></details>`;
+}
+function render(){
+  const key=location.hash.slice(1);
+  const route=({guide:'practice',connector:'desk'})[key] || (Object.hasOwn(views,key)?key:'desk');
+  state.visited.add(route);
+  document.body.dataset.route=route;
+  app.innerHTML=`<header class="mast"><a class="brand" href="#desk">Flipkart Knowledge</a><span class="live-badge">Live offer · ${revision(state.version)}</span>
+    <div class="workspace-nav">${workspaceNavigation(route)}</div>${tour()}</header>
+    <main class="stage" id="workspace-main" tabindex="-1">${views[route]()}</main><footer>Flipkart Knowledge <span>Fictional offer · Scripted demo</span></footer>`;
+  document.title=screens[route]+' · Flipkart Knowledge';
+  if(document.querySelector('#source')){
+    document.querySelector('#source').value=state.field;
+    showMapping();
+  }
+  if(route==='desk'){
+    document.querySelectorAll('.question').forEach((el,i)=>el.textContent=state.turns[i].question);
+    if(key==='connector')openChatDetails(true);
+  }
+}
+function openChatDetails(showOrder){
+  const dialog=document.querySelector('.chat-dialog');
+  const turn=state.turns[state.selected];
+  dialog.querySelector('#turn-policy').innerHTML=turn.kind==='unknown'?'<p>No matching rule. Ask your team lead.</p>':policy(turn.version);
+  dialog.querySelector('details').open=showOrder;
+  dialog.showModal();
+}
+function showMapping(){
+  const el=document.querySelector('#mapping');
+  el.textContent=state.field==='paid_amount'?'paid_amount → ₹850. This is what the customer paid, so use it for the offer check.':'list_price → ₹1,100. This is the price before the discount. Choose the amount paid to check this offer.';
+}
+function ask(question,kind){
+  if(!question.trim())return;
+  state.turns.push({question,kind,version:state.turns[0].version});
+  state.selected=state.turns.length-1;render();
+  const thread=document.querySelector('.thread');thread.scrollTop=thread.scrollHeight;
+  document.querySelector('#ask input').focus({preventScroll:true});
+}
+app.addEventListener('submit',e=>{
+  e.preventDefault();
+  const q=new FormData(e.target).get('question').trim();
+  ask(q,classify(q));
+});
+app.addEventListener('change',e=>{
+  if(e.target.id==='source'){state.field=e.target.value;showMapping();}
+});
+app.addEventListener('toggle',e=>{ if(e.target.classList?.contains('tour')) state.tourOpen=e.target.open; },true);
+app.addEventListener('click',e=>{
+  const branch=e.target.closest('[data-branch]');
+  const treeAction=e.target.closest('[data-action]')?.dataset.action;
+  if(branch || treeAction==='tree-back' || treeAction==='tree-reset'){
+    if(branch)treePath.push(Number(branch.dataset.branch));
+    else if(treeAction==='tree-back')treePath.pop();
+    else treePath.length=0;
+    render();document.querySelector('#tree-question').focus();return;
+  }
+  const suggest=e.target.closest('[data-suggest]');
+  if(suggest){ask(suggest.textContent,suggest.dataset.suggest);return;}
+  const citation=e.target.closest('[data-turn]');
+  if(citation){state.selected=Number(citation.dataset.turn);openChatDetails(false);return;}
+  if(e.target.closest('[data-open-order]')){openChatDetails(true);return;}
+  if(e.target.closest('[data-close]')){document.querySelector('.chat-dialog').close();return;}
+  const action=e.target.closest('[data-action]')?.dataset.action;
+  if(!action)return;
+  switch(action){
+    case 'return':state.review='returned';state.history.push([now(),'Arjun sent v2.0 back to Meera.']);break;
+    case 'resubmit':state.review='pending';state.clarified=true;state.history.push([now(),'Meera said the new minimum applies to orders placed after publishing, and resubmitted.']);break;
+    case 'publish':treePath.length=0;state.version=2;state.history.push([now(),'Arjun approved and published v2.0.']);break;
+    case 'read':state.read.add(state.version);break;
+    case 'newcall':startCase();if(state.version===2)state.newCallV2=true;location.hash='desk';render();return;
+    case 'yes':case 'no':state.attempts.push({version:state.version,correct:(action==='yes')===eligible(state.version)});break;
+  }
+  render();
+});
+document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();document.querySelector('main').focus();});
+window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0);});
+render();
+
+</script></body></html>

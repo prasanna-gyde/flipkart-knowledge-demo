@@ -3,468 +3,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Flipkart workspace</title>
-  <style>
-:root {
-  font: 16px/1.55 "Helvetica Neue", "Segoe UI", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #202022; background: #ffffff;
-  --ink: #202022; --quiet: #65656b; --rule: #e3e3e7; --accent: #2046c8;
-}
-* { box-sizing: border-box; }
-body { margin: 0; }
-a { color: inherit; text-underline-offset: .25em; }
-button, input, select { font: inherit; }
-button, .button { cursor: pointer; }
-:focus-visible { outline: 3px solid #5480ff; outline-offset: 3px; }
-.skip { position: absolute; z-index: 5; transform: translateY(-130%); background: white; padding: 8px; }
-.skip:focus { transform: translateY(0); }
-.mast,main,footer { width: min(1280px,92%); margin: auto; }
-.mast { display: flex; justify-content: space-between; align-items: center; gap: 20px; min-height: 76px; border-bottom: 1px solid var(--ink); }
-.brand { font-weight: 450; font-size: 19px; letter-spacing: -.04em; text-decoration: none; white-space: nowrap; }
-.brand span { color: #86938c; margin: 0 5px; font-weight: 400; }
-nav { display: flex; gap: clamp(12px,2vw,32px); align-self: stretch; }
-nav a { text-decoration: none; align-content: center; font-size: 13px; font-weight: 400; border-bottom: 3px solid transparent; padding-top: 3px; color: var(--quiet); }
-nav [aria-current] { border-color: currentColor; color: var(--ink); }
-main { padding: 36px 0; min-height: 72vh; }
-footer { border-top: 1px solid var(--rule); display: flex; justify-content: space-between; gap: 12px; padding: 18px 0 26px; font-size: 11px; color: var(--quiet); }
-h1,h2,h3,p { margin: 0; }
-h1,h2,h3 { line-height: 1.15; font-weight: 350; letter-spacing: -.035em; }
-h1 { font-size: clamp(40px,5vw,80px); }
-h2 { font-size: clamp(25px,2.4vw,40px); }
-h3 { font-size: 19px; }
-p { max-width: 68ch; margin: 12px 0 20px; }
-.kicker, .paper small { display: block; color: var(--quiet); font: 450 12px/1.5 "Helvetica Neue",Arial,sans-serif; letter-spacing: .025em; text-transform: none; margin-bottom: 18px; }
-.button,button { display: inline-flex; justify-content: center; align-items: center; text-decoration: none; min-height: 40px; padding: 9px 16px; border: 1px solid var(--ink); color: #fff; background: var(--ink); font-weight: 450; font-size: 14px; border-radius: 4px; }
-button:hover,.button:hover { filter: brightness(.88); }
-.secondary { color: var(--ink); background: transparent; border-color: var(--rule); }
-.actions { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; }
-.link { font-size: 14px; font-weight: 450; color: var(--accent); }
-.front { display: grid; grid-template-columns: 1fr 1.15fr; background: #efece0; }
-.cover { padding: clamp(25px,4vw,65px); align-self: center; }
-.cover h1 { font: 300 clamp(46px,5vw,76px)/1.04 "Helvetica Neue",Arial,sans-serif; letter-spacing: -.081em; }
-.cover h1 span { color: #3755c5; }
-.cover p { max-width: 34ch; margin: 24px 0; }
-.cover-photo { width: 100%; height: 100%; min-height: 350px; max-height: 490px; object-fit: cover; }
-.index { margin-top: 18px; }
-.index a { display: grid; grid-template-columns: 40px 1fr 1fr 32px; gap: 18px; align-items: center; min-height: 70px; padding: 9px 6px; text-decoration: none; border-top: 1px solid var(--rule); }
-.index a:hover { background: #efefe9; }
-.index p { color: var(--quiet); font-size: 14px; margin: 0; }
-.index h2 { font-size: clamp(20px,2vw,30px); }
-.index-icon { display: grid; place-items: center; width: 35px; height: 35px; background: #e4e9ff; border-radius: 50%; color: #2440a1; }
-.index a:nth-child(2) .index-icon { background: #d9ebe3; color: #155947; }
-.index a:nth-child(3) .index-icon { background: #ffe7a3; color: #754d18; }
-svg { width: 19px; height: 19px; }
-.desk-layout { display: grid; grid-template-columns: 1.35fr 1fr; min-height: 590px; border: 1px solid var(--rule); }
-.conversation,.source { padding: clamp(24px,3.8vw,58px); }
-.conversation { background: white; }
-.conversation h1 { font-size: clamp(36px,3.6vw,56px); }
-.thread { margin: 34px 0 25px; }
-.speaker { display: block; font-weight: 500; font-size: 12px; color: var(--quiet); }
-.thread p { margin: 6px 0 22px; }
-.thread h2 { font-size: 22px; margin: 8px 0; }
-.assistant { color: var(--accent); }
-#ask { display: flex; align-items: center; gap: 8px; padding: 7px; border: 1px solid #aab6cc; border-radius: 5px; }
-#ask input { border: 0; flex: 1; min-width: 0; }
-#ask+.actions { margin-top: 10px; }
-#ask+.actions button { font-size: 12px; min-height: 32px; padding: 4px 8px; }
-.source { background: #e9ecf4; }
-.paper { background: #fffef8; box-shadow: none; padding: 28px; margin-top: 22px; }
-.paper h2 { font-weight: 300; }
-.paper p { color: var(--quiet); font-size: 14px; }
-hr { border: 0; border-top: 1px solid var(--rule); margin: 22px 0; }
-blockquote { margin: 16px 0 24px; border-left: 2px solid #c8a7ba; padding: 6px 14px; background: #f7f0f4; }
-.hero { padding: 22px 0 28px; border-bottom: 1px solid var(--ink); }
-.hero p:last-child { margin-bottom: 0; }
-.grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: clamp(24px,4vw,64px); margin-top: 26px; }
-.grid>div { min-width: 0; }
-.panel { padding: 10px 0; }
-.row { border-top: 1px solid var(--rule); padding-top: 16px; margin-top: 18px; }
-.tag { display: inline-block; font: 12px/1.4 Menlo,monospace; color: var(--quiet); margin: 14px 0 0; }
-.info { padding: 14px; border-left: 3px solid #4a947c; background: #e8f1eb; color: #193e30; margin-top: 14px; }
-.info p { margin: 5px 0 0; }
-label { display: block; font-weight: 450; margin: 16px 0 6px; }
-input,select { padding: 10px; max-width: 100%; background: white; color: #202022; border: 1px solid var(--rule); border-radius: 3px; }
-[data-route="guide"],[data-route="connector"] { background: #142322; color: #e9f3eb; --ink: #eef5ef; --quiet: #adbbb4; --rule: #3c504d; --accent: #b9e9c9; }
-[data-route="guide"] .hero h1,[data-route="connector"] h1 { font-weight: 300; letter-spacing: -.032em; }
-[data-route="guide"] .grid { grid-template-columns: .95fr 1.2fr; gap: 0; }
-[data-route="guide"] .grid>div:first-child { grid-column: 2; grid-row: 1; padding: 10px 0 15px 8%; border-left: 1px solid var(--rule); }
-[data-route="guide"] .grid>div:last-child { grid-column: 1; grid-row: 1; padding-right: 9%; }
-[data-route="guide"] button,[data-route="connector"] button { color: #183328; background: #b9e9c9; border-color: #b9e9c9; }
-[data-route="guide"] .secondary { color: #eaf3ec; background: transparent; border-color: #84958b; }
-.timeline { list-style: none; padding: 0; margin: 18px 0; }
-.timeline li { display: grid; grid-template-columns: 100px 1fr; border-top: 1px solid var(--rule); padding: 9px 0; font-weight: 450; font-size: 14px; }
-.timeline small { font: 11px/1.8 Menlo,monospace; color: var(--quiet); }
-.brief-cover { display: grid; grid-template-columns: 1fr 1fr; background: #ffde56; }
-.brief-cover img { width: 100%; height: 300px; object-fit: cover; }
-.shiftHero { padding: clamp(24px,3.2vw,48px); border: 0; align-self: center; }
-.shiftHero h1 { font: 300 clamp(38px,4vw,58px)/1.06 "Helvetica Neue",Arial,sans-serif; letter-spacing: -.07em; }
-.brief-progress { display: flex; justify-content: space-between; font-size: 12px; max-width: 360px; }
-progress { width: min(360px,100%); accent-color: #202022; height: 7px; }
-[data-route="shift"] .grid>div:last-child { border-left: 1px solid var(--rule); padding-left: 8%; }
-[data-route="shift"] .panel .actions { margin-top: 15px; }
-@media(max-width:760px) {
-  .mast { display: block; padding-top: 12px; }
-  nav { overflow-x: auto; gap: 15px; }
-  nav a { white-space: nowrap; padding: 9px 0; font-size: 12px; }
-  main { padding: 20px 0; }
-  .front,.desk-layout,.grid,.brief-cover,[data-route="guide"] .grid { grid-template-columns: 1fr; }
-  .cover-photo { min-height: 0; height: 190px; }
-  .index a { grid-template-columns: 35px 1fr 24px; gap: 10px; }
-  .index p { grid-column: 2; grid-row: auto; }
-  .index strong { grid-column: 3; grid-row: 1 / 3; }
-  .index-icon { grid-row: span 2; }
-  .desk-layout { min-height: 0; }
-  .paper { margin-top: 12px; }
-  [data-route="guide"] .grid>div:first-child,[data-route="guide"] .grid>div:last-child { grid-row: auto; grid-column: auto; padding: 0; border: 0; }
-  .brief-cover img { height: 185px; }
-  [data-route="shift"] .grid>div:last-child { padding: 16px 0 0; border-left: 0; border-top: 1px solid var(--rule); }
-  footer { flex-wrap: wrap; }
-}
-
-/* Keep the conversation on the canvas and the selected source in view. */
-.desk-layout { border: 0; grid-template-columns: minmax(0,1.55fr) minmax(0,1fr); gap: clamp(20px,4vw,72px); }
-.conversation { background: transparent; padding: 8px 0; }
-.conversation h1 { font-weight: 300; letter-spacing: -.032em; }
-.thread { max-height: 45vh; overflow-y: auto; padding-right: 9px; scrollbar-width: thin; }
-.exchange + .exchange { margin-top: 30px; border-top: 1px solid var(--rule); padding-top: 16px; }
-.thread .user-prompt { margin: 0 0 22px auto; padding: 10px 16px; background: #f2f2f4; border-radius: 15px 15px 3px 15px; width: fit-content; }
-.thread h2 { font-size: 18px; letter-spacing: -.02em; }
-.thread p { margin-bottom: 12px; }
-.citation { background: transparent; color: #314ca3; border: 0; min-height: 28px; padding: 2px 0; font-size: 12px; }
-.citation[aria-pressed=true] { text-decoration: underline; text-underline-offset: 4px; }
-.source { align-self: start; border-left: 1px solid var(--rule); padding: 10px 0 30px clamp(18px,3vw,42px); background: transparent; }
-.paper { background: #fff; border: 1px solid var(--rule); }
-#ask { background: white; }
-@media(max-width:760px){
-  .desk-layout { grid-template-columns: 1fr; }
-  .source { border-left: 0; border-top: 1px solid var(--rule); padding: 20px 0; }
-}
-
-/* A quiet navigation column leaves the working canvas to the case and its evidence. */
-@media(min-width: 940px) {
-  #app { display: grid; grid-template-columns: 195px minmax(0,1fr); min-height: 100vh; grid-template-rows: 1fr auto; }
-  .mast { margin: 0; grid-row: span 2; align-self: stretch; display: block; width: 100%; padding: 29px 13px; border: 0; border-right: 1px solid var(--rule); background: #f8f8f9; color: #27272b; }
-  .brand { display: block; font-size: 18px; padding: 0 9px; }
-  nav { display: grid; gap: 4px; margin-top: 36px; }
-  nav a { display: flex; align-items: center; gap: 10px; border: 0; border-radius: 6px; padding: 9px 12px; color: #56565d; font-size: 14px; }
-  nav a:hover,nav [aria-current] { background: #eaeaec; color: #242428; }
-  main { padding-top: 44px; }
-  footer { grid-column: 2; }
-}
-nav svg { width: 15px; height: 15px; }
-@media(max-width:939px) { nav svg { display: none; } }
-.thread h2,.paper h3 { font-weight: 450; }
-.paper small { color: #66666d; }
-[data-route="guide"] .mast,[data-route="connector"] .mast { border-color: #d6d6d9; }
-
-.handoff { margin: 20px 0 8px; }
-details { border-top: 1px solid var(--rule); padding: 12px 0 0; }
-summary { cursor: pointer; color: var(--accent); font-size: 14px; }
-[data-route="guide"],[data-route="connector"] { background: #f9faf9; color: #202022; --ink:#202022; --quiet:#56605a; --rule:#d8dfda; --accent:#225645; }
-[data-route="guide"] .secondary { color:#214438; border-color:#acbcb2; }
-
-[data-route="connector"] select {
-  appearance: none;
-  width: min(100%, 24rem);
-  min-height: 44px;
-  padding: 10px 42px 10px 14px;
-  border-radius: 7px;
-  cursor: pointer;
-  background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%2356605a' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
-}
-@media (forced-colors: active) { [data-route="connector"] select { appearance: auto; } }
-.call-context { color: var(--quiet); margin: 8px 0 20px; }
-.thread { max-height: none; padding: 0; }
-.thread.has-followups { max-height: 62vh; }
-.exchange + .exchange { border: 0; padding: 0; margin-top: 18px; }
-.chat-message { width: fit-content; max-width: 88%; padding: 12px 16px; }
-.chat-message .speaker { display: block; font-size: 13px; font-weight: 550; }
-.chat-message p { margin: 5px 0 0; }
-.agent-message { margin: 0 0 10px auto; background: #edf2ff; border-radius: 14px 14px 3px 14px; }
-.agent-message .speaker { color: #294e97; }
-.thread .agent-message .user-prompt { background: transparent; margin: 5px 0 0; padding: 0; }
-.knowledge-message { border: 1px solid var(--rule); border-radius: 3px 14px 14px; background: white; }
-.knowledge-message .speaker { color: #245e46; }
-.knowledge-message .citation { margin-top: 5px; }
-.thread:empty { display: none; }
-.tree-paths { list-style: none; padding: 0 0 0 16px; margin: 12px 0 20px; border-left: 1px solid var(--rule); }
-.tree-path { position: relative; margin: 12px 0; padding: 12px 15px; border: 1px solid var(--rule); border-radius: 6px; }
-.tree-path::before { content: ''; position: absolute; left: -17px; top: 25px; width: 16px; border-top: 1px solid var(--rule); }
-.tree-path.recommended { border-color: #9bbcae; background: #eff7f2; }
-.tree-path small { color: var(--quiet); font-size: 12px; }
-.tree-path h3 { margin: 4px 0; }
-.tree-path p { margin: 6px 0 10px; }
-
-.stage { max-width: 1100px; margin: auto; }
-.stage h1 { font-size: clamp(34px,4vw,55px); font-weight: 300; }
-.stage header { margin-bottom: 24px; border-bottom: 1px solid var(--rule); padding-bottom: 18px; }
-.stage h2 { font-size: 24px; margin: 8px 0 14px; }
-.stage p { margin: 8px 0 14px; }
-.columns { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr); gap: clamp(18px,3vw,44px); }
-.sheet { padding: 20px; border: 1px solid var(--rule); background: white; }
-.sheet + .sheet { margin-top: 14px; }
-.meta { color: var(--quiet); font-size: 13px; }
-.rule { border-left: 3px solid #7191c6; padding-left: 12px; }
-.stage details { margin: 14px 0; }
-.stage summary { font-weight: 500; }
-.stage select { display:block; width:min(100%,22rem); height:44px; padding:8px 12px; margin-bottom:12px; }
-.stage .actions { margin: 12px 0; }
-.stage .thread { max-height: none; overflow: visible; margin: 0 0 10px; }
-.stage .exchange { margin-bottom: 14px; }
-.stage .thread p { margin: 5px 0; }
-.stage .chat-message { padding: 10px 14px; }
-.stage .chat-message .speaker { margin-bottom: 4px; }
-.stage .handoff { margin: 24px 0; }
-.stage table { width:100%; border-collapse:collapse; font-size:14px; text-align:left; }
-.stage td,.stage th { padding:10px 4px; border-bottom:1px solid var(--rule); vertical-align:top; }
-.stage th { font-weight:500; }
-@media(max-width:760px){ .columns { grid-template-columns:1fr; } .sheet { padding:14px; } }
-.tree-options {display:grid; gap:8px; margin-top:16px;}
-.tree-options button {justify-content:space-between; text-align:left; color:var(--ink); background:white; border-color:var(--rule);}
-.tree-options button:hover {background:#eff5f1; border-color:#9cbbaa;}
-.tree-trail {font-size:13px; color:var(--quiet);}
-[data-route="desk"] .stage { width:100%; max-width:none; padding:0; margin:0; display:flex; flex-direction:column; min-width:0; }
-[data-route="desk"] footer { display:none; }
-.stage .chat-bar { display:flex; align-items:center; justify-content:space-between; padding:14px clamp(16px,3vw,44px); margin:0; border:0; }
-.stage .chat-bar h1 { font-size:20px; font-weight:450; letter-spacing:-.035em; margin:0; }
-.chat-bar button, .chat-dialog .close { background:transparent; color:var(--quiet); border:1px solid var(--rule); border-radius:22px; font-size:13px; padding:5px 13px; min-height:34px; }
-.stage .thread, .chat-compose { width:min(760px,calc(100% - 36px)); margin-inline:auto; }
-.stage .thread { padding:16px 0; margin-block:0; overflow-wrap:anywhere; }
-.stage .exchange { margin:0; }
-.stage .exchange + .exchange { margin-top:20px; }
-.stage .chat-message { padding:0; font-size:16px; line-height:1.5; }
-.stage .agent-message { background:#ecf4fc; padding:9px 16px; margin:0 0 14px auto; border-radius:18px; }
-.stage .knowledge-message { border:0; }
-.stage .chat-message .speaker { font-size:12px; margin:0; }
-.stage .thread p { margin:2px 0; }
-.stage .citation { margin:0; min-height:24px; }
-.chat-compose { padding:8px 0 16px; }
-.chat-compose .actions { margin:0 0 5px; }
-.chat-compose .actions button { background:none; border:0; color:var(--quiet); min-height:28px; font-size:13px; padding:2px 8px; }
-.chat-compose #ask { border-radius:28px; padding:5px 6px 5px 16px; border-color:#d7d9dd; box-shadow:0 2px 10px #10182809; }
-.chat-compose #ask:has(input:focus) { border-color:#68798c; box-shadow:0 0 0 1px #68798c; }
-.chat-compose #ask input:focus { outline:none; }
-@media (forced-colors:active) {
-  .chat-compose #ask:has(input:focus) { outline:2px solid Highlight; outline-offset:1px; }
-}
-.chat-compose #ask button { border-radius:50%; width:38px; min-height:38px; padding:0; font-size:20px; }
-.chat-dialog { width:min(460px,92vw); max-height:85dvh; overflow:auto; border:1px solid var(--rule); border-radius:16px; padding:24px; color:var(--ink); }
-.chat-dialog::backdrop { background:#17233244; }
-.chat-dialog .close { float:right; }
-.chat-dialog .sheet { padding:10px 0; border:0; }
-@media(min-width:940px) and (min-height:600px){
-  [data-route="desk"] #app { height:100dvh; grid-template-rows:minmax(0,1fr); }
-  [data-route="desk"] .mast { grid-row:1; }
-  [data-route="desk"] .stage { height:100%; min-height:0; }
-  .stage .thread { flex:1; min-height:0; overflow-y:auto; }
-}
-.workspace-nav nav { display:block; margin:0; overflow:visible; }
-.workspace-nav h2 { font-size:13px; line-height:1.4; font-weight:500; letter-spacing:normal; color:var(--quiet); margin:0 12px 6px; }
-.workspace-nav .nav-links { display:grid; gap:3px; }
-.workspace-nav { margin-top:32px; }
-.workspace-nav nav + nav { border-top:1px solid var(--rule); padding-top:18px; margin-top:18px; }
-@media(max-width:939px) {
-  .mast { display:block; padding-block:12px; }
-  .workspace-nav { margin-top:12px; }
-  .workspace-nav h2 { margin:0; font-size:12px; }
-  .workspace-nav .nav-links { display:flex; flex-wrap:wrap; gap:0 15px; }
-  .workspace-nav nav + nav { margin-top:5px; padding-top:7px; }
-  .workspace-nav a { padding:5px 0; }
-}
-</style></head>
-<body>
-  <a class="skip" href="#workspace-main">Skip to content</a>
-  <div id="app"></div>
+  <title>Flipkart Knowledge · Design options</title>
   <script>
-const app = document.querySelector('#app');
-const screens = {desk:'Agent workspace',studio:'Review & publish',shift:'Morning briefing',practice:'Practice call',report:'Team report'};
-const rules = {
-  1:{min:500, text:'Pay by UPI and spend at least ₹500 after discounts to earn ₹50 cashback.'},
-  2:{min:1000, text:'Pay by UPI and spend at least ₹1,000 after discounts to earn ₹50 cashback.'}
-};
-const state = {version:1, review:'pending', clarified:false, read:new Set(), attempts:[], history:[], field:'paid_amount', turns:[], selected:0};
-const example = {paid_amount:850, list_price:1100, payment_method:'UPI'};
-const revision = v => 'v'+v+'.0';
-const money = n => '₹'+n.toLocaleString('en-IN');
-const eligible = v => example.paid_amount >= rules[v].min;
-const link = (id,text) => '<a class="link" href="#'+id+'">'+text+'</a>';
-const button = (action,text,secondary=false) => '<button type="button" data-action="'+action+'" class="'+(secondary?'secondary':'')+'">'+text+'</button>';
-const intro = (section,title,description) => '<header><span class="kicker">'+section+'</span><h1>'+title+'</h1><p>'+description+'</p></header>';
-const handoff = (id,text) => '<div class="handoff">'+link(id,text+' →')+'</div>';
-const policy = v => '<p class="rule">'+rules[v].text+'</p>';
-const tip = '<span class="meta">Sample offer · Weekend UPI cashback</span>';
-function answer(turn){
-  if(turn.kind==='unknown') return 'The offer terms don’t cover that question. Check with your team lead.';
-  if(turn.kind==='check') return 'Check the offer version on the order, how the customer paid, and the amount they paid after discounts.';
-  if(turn.kind==='script') return eligible(turn.version)
-    ? 'You can say, “Your ₹850 UPI payment meets this offer’s ₹500 minimum. I’ll check why your cashback hasn’t arrived.”'
-    : 'You can say, “The minimum for this offer is ₹1,000 after discounts. You paid ₹850, so this order doesn’t qualify for the ₹50 cashback.”';
-  return eligible(turn.version) ? 'Yes. The customer paid ₹850 by UPI. That meets the ₹500 minimum. Check the cashback status next.' : 'No. The customer paid ₹850 after discounts. The minimum is ₹1,000.';
-}
-function startCase(){
-  state.turns=[
-    {question:'A customer is on the phone about missing cashback. What should I check?',kind:'check',version:state.version},
-    {question:'They paid ₹850 by UPI after discounts. Does this order qualify?',kind:'eligibility',version:state.version}
-  ];
-  state.selected=1;
-}
-startCase();
-function agent(){
-  const selected=state.turns[state.selected];
-  const conversation=state.turns.map((t,i)=>`<article class="exchange">
-    <div class="chat-message agent-message"><span class="speaker">Support agent</span><p class="question"></p></div>
-    <div class="chat-message knowledge-message"><span class="speaker">Knowledge base</span><p>${answer(t)}</p>
-    <button class="citation" data-turn="${i}" aria-haspopup="dialog">${t.kind==='unknown'?'Check policy coverage':'Offer terms · '+revision(t.version)} ↗</button></div></article>`).join('');
-  return `<header class="chat-bar"><h1>Where’s my cashback?</h1><button data-open-order aria-haspopup="dialog">Order details</button></header>
-    <div class="thread" tabindex="0" aria-label="Sample conversation">${conversation}</div>
-    <div class="chat-compose"><div class="actions">${button('script','What should I say?',true)}</div>
-    <form id="ask"><input name="question" required aria-label="Ask the knowledge base" placeholder="Ask the knowledge base"><button aria-label="Send question">↑</button></form></div>
-    <dialog class="chat-dialog" aria-labelledby="terms-title"><button class="close" data-close>Close</button><div class="sheet">${tip}<h2 id="terms-title">Approved offer terms</h2><p class="meta">Returns & payments team · ${revision(selected.version)}</p>
-    <div id="turn-policy">${policy(selected.version)}</div></div>
-    <details class="sheet"><summary>Order details & custom connector</summary><p>Sample order FK-8042 · Offer ${revision(state.turns[0].version)}</p><p>List price ₹1,100 · Paid ₹850 · UPI</p>
-    <label for="source">Order field for checking the minimum spend</label><select id="source"><option value="paid_amount">Amount paid after discounts</option><option value="list_price">List price before discounts</option></select><p id="mapping" role="status"></p></details>
-    ${state.version===2?handoff('practice','Practise this offer rule'):handoff('studio','Review the offer change')}</dialog>`;
-}
-function review(){
-  const done=state.version===2;
-  return intro('Content studio','Review the cashback offer','Meera from the offers team drafted this change. Arjun is the reviewer.')+
-    `<div class="columns"><section class="sheet">${tip}<h2>Minimum spend</h2><p class="meta">Original · v1.0</p>${policy(1)}<p class="meta">${done?'Published':'Proposed'} · v2.0</p>${policy(2)}
-    <p>The cashback stays at ₹50. ${state.clarified||done?'The new minimum applies to orders placed under v2.0.':''}</p>
-    <div class="actions">${done?'Published by Arjun.':state.review==='pending'?button('publish','Approve and publish')+button('return','Send back to author',true):'<p>Arjun asked Meera to clarify when the new minimum applies.</p>'+button('resubmit','Resubmit with start rule')}</div></section>
-    <section><h2>Review history</h2><p>Meera submitted v2.0 for review.</p>${state.history.map(entry=>'<p>'+entry+'</p>').join('')}
-    ${handoff('shift','Open the morning briefing')}</section></div>`;
-}
-function briefing(){
-  const v=state.version;
-  return intro('Morning briefing','Today’s offer update',v===2?'The offers team has published a new minimum spend.':'The current offer is below. The proposed change is still in review.')+
-    `<div class="columns"><section class="sheet">${tip}<h2>${v===2?'The minimum spend is now ₹1,000':'The minimum spend is ₹500'}</h2>${policy(v)}
-    <p class="meta">Published version · ${revision(v)}</p>${state.read.has(v)?'<p role="status">You marked this update as read.</p>':button('read','Mark as read')}</section>
-    <section><h2>Use the update</h2><p>Try a sample call about an ₹850 UPI order under ${revision(v)}.</p>${button('newcall','Open sample call')}
-    ${handoff('practice','Take the knowledge check')}</section></div>`;
-}
-const treePath = [];
-function decisionTree(){
-  const minimum=money(rules[state.version].min);
-  const nodes={
-    payment:{title:'How did the customer pay?',choices:[['UPI','amount'],['Card or another method','other'],['Payment method unknown','receipt']]},
-    amount:{title:'How much did they pay after discounts?',choices:[['At least '+minimum,'cashback'],['Less than '+minimum,'below'],['Amount unknown','amountCheck']]},
-    cashback:{title:'What does the cashback status show?',choices:[['Credited','credited'],['Missing','missing'],['Status unavailable','statusCheck']]},
-    other:{title:'Explain the payment rule',text:'This offer applies to UPI payments only.'},
-    receipt:{title:'Check the payment method',text:'Open the payment details before deciding whether the order qualifies.'},
-    below:{title:'Explain the minimum spend',text:'The customer paid less than '+minimum+' after discounts, so this order does not qualify.'},
-    amountCheck:{title:'Check the final amount',text:'Find the amount paid on the receipt, then return to the spend question.'},
-    credited:{title:'Show the customer the credit',text:'Confirm the ₹50 cashback entry with the customer.'},
-    missing:{title:'Check the missing credit',text:'The order meets the offer terms. Ask the payments team to check why the ₹50 credit is missing.'},
-    statusCheck:{title:'Confirm the cashback status',text:'Check the payment record before telling the customer that the cashback has arrived.'}
-  };
-  let node=nodes.payment;
-  const trail=[];
-  for(const choice of treePath){
-    const [label,next]=node.choices[choice];
-    trail.push(label);node=nodes[next];
-  }
-  return `<section class="sheet" aria-label="Interactive decision tree"><p class="meta">Decision tree · ${revision(state.version)}</p>
-    ${trail.length?'<p class="tree-trail">'+trail.join(' → ')+'</p>':''}
-    <h2 tabindex="-1" id="tree-question">${node.title}</h2>
-    ${node.choices?`<div class="tree-options">${node.choices.map(([label],i)=>`<button type="button" data-branch="${i}">${label} <span aria-hidden="true">→</span></button>`).join('')}</div>`:'<p role="status">'+node.text+'</p>'}
-    ${trail.length?'<div class="actions">'+button('tree-back','Back one step',true)+button('tree-reset','Start again',true)+'</div>':''}</section>`;
-}
-function practice(){
-  const v=state.version;
-  const last=state.attempts.filter(a=>a.version===v).at(-1);
-  return intro('Practice call','Cashback decision tree','Choose a payment method to start. Each answer leads to the next question or a suggested action.')+
-    `<div class="columns">${decisionTree()}<section class="sheet"><p class="meta">Knowledge check · Sample order · ${revision(v)}</p><h2>Does this order qualify?</h2>
-    <p>The list price was ₹1,100. The customer used a discount and paid ₹850 by UPI.</p><div class="actions">${button('yes','Yes, it qualifies',true)}${button('no','No, it falls short',true)}</div>
-    ${last?`<div class="info" role="status"><strong>${last.correct?'Correct.':'Try again.'}</strong> Compare the ₹850 payment with the ${money(rules[v].min)} minimum.</div>`:''}${handoff('report','See the team report')}</section></div>`;
-}
-function report(){
-  return intro('Content studio','Team report','Reading an update and answering the practice question are counted separately.')+
-    `<div class="sheet"><h2>Your demo session</h2><table><thead><tr><th>Offer</th><th>Briefing read</th><th>Practice attempts</th><th>Correct answers</th></tr></thead><tbody>
-    ${[1,2].filter(v=>v<=state.version).map(v=>{const attempts=state.attempts.filter(a=>a.version===v);return '<tr><td>'+revision(v)+'</td><td>'+(state.read.has(v)?'Yes':'No')+'</td><td>'+attempts.length+'</td><td>'+attempts.filter(a=>a.correct).length+'</td></tr>';}).join('')}</tbody></table>
-    <p class="meta">Counts start at zero when you open the demo.</p></div>${handoff('studio','Review offer history')}`;
-}
-const views={desk:agent,studio:review,shift:briefing,practice,report};
-const navigationGroups = [
-  {label:'Support agents', routes:['desk','shift','practice']},
-  {label:'Content admins & team managers', routes:['studio','report']}
-];
-function workspaceNavigation(route){
-  return navigationGroups.map(({label,routes}) => {
-    const links = routes.map(id => `<a href="#${id}" ${id===route?'aria-current="page"':''}>${screens[id]}</a>`).join('');
-    return `<nav aria-label="${label}"><h2>${label}</h2><div class="nav-links">${links}</div></nav>`;
-  }).join('');
-}
-function render(){
-  const key=location.hash.slice(1);
-  const route=({guide:'practice',connector:'desk'})[key] || (Object.hasOwn(views,key)?key:'desk');
-  document.body.dataset.route=route;
-  app.innerHTML=`<header class="mast"><a class="brand" href="#desk">Flipkart Knowledge</a>
-    <div class="workspace-nav">${workspaceNavigation(route)}</div></header>
-    <main class="stage" id="workspace-main" tabindex="-1">${views[route]()}</main><footer>Flipkart knowledge workspace <span>Fictional offer · Scripted demo</span></footer>`;
-  document.title=screens[route]+' · Flipkart Knowledge';
-  if(route==='desk'){
-    document.querySelectorAll('.question').forEach((el,i)=>el.textContent=state.turns[i].question);
-    document.querySelector('#source').value=state.field;
-    showMapping();
-    if(key==='connector')openChatDetails(true);
-  }
-}
-function openChatDetails(showOrder){
-  const dialog=document.querySelector('.chat-dialog');
-  const turn=state.turns[state.selected];
-  dialog.querySelector('#turn-policy').innerHTML=turn.kind==='unknown'?'<p>No matching rule. Ask your team lead.</p>':policy(turn.version);
-  dialog.querySelector('details').open=showOrder;
-  dialog.showModal();
-}
-function showMapping(){
-  const el=document.querySelector('#mapping');
-  el.textContent=state.field==='paid_amount'?'Sample feed: paid_amount → ₹850. Use this amount for the offer check.':'Sample feed: list_price → ₹1,100. This is the price before the discount. Choose the amount paid to check this offer.';
-}
-function ask(question,kind){
-  if(!question.trim())return;
-  state.turns.push({question,kind,version:state.turns[0].version});
-  state.selected=state.turns.length-1;render();
-  const thread=document.querySelector('.thread');thread.scrollTop=thread.scrollHeight;
-  document.querySelector('#ask input').focus({preventScroll:true});
-}
-app.addEventListener('submit',e=>{
-  e.preventDefault();
-  const q=new FormData(e.target).get('question').trim();
-  const text=q.toLowerCase().replace(/[?!.]+$/,'');
-  const kind=({'what should i say':'script','does this order qualify':'eligibility','what should i check':'check'})[text] || 'unknown';
-  ask(q,kind);
-});
-app.addEventListener('change',e=>{
-  if(e.target.id==='source'){state.field=e.target.value;showMapping();}
-});
-app.addEventListener('click',e=>{
-  const branch=e.target.closest('[data-branch]');
-  const treeAction=e.target.closest('[data-action]')?.dataset.action;
-  if(branch || treeAction==='tree-back' || treeAction==='tree-reset'){
-    if(branch)treePath.push(Number(branch.dataset.branch));
-    else if(treeAction==='tree-back')treePath.pop();
-    else treePath.length=0;
-    render();document.querySelector('#tree-question').focus();return;
-  }
-  const citation=e.target.closest('[data-turn]');
-  if(citation){state.selected=Number(citation.dataset.turn);openChatDetails(false);return;}
-  if(e.target.closest('[data-open-order]')){openChatDetails(true);return;}
-  if(e.target.closest('[data-close]')){document.querySelector('.chat-dialog').close();return;}
-  const action=e.target.closest('[data-action]')?.dataset.action;
-  if(!action)return;
-  switch(action){
-    case 'script':return ask('What should I say?','script');
-    case 'return':state.review='returned';state.history.push('Arjun sent v2.0 back to Meera.');break;
-    case 'resubmit':state.review='pending';state.clarified=true;state.history.push('Meera confirmed the new minimum applies to v2.0 orders and resubmitted the draft.');break;
-    case 'publish':treePath.length=0;state.version=2;state.history.push('Arjun approved and published v2.0.');break;
-    case 'read':state.read.add(state.version);break;
-    case 'newcall':startCase();location.hash='desk';return;
-    case 'yes':case 'no':state.attempts.push({version:state.version,correct:(action==='yes')===eligible(state.version)});break;
-  }
-  render();
-});
-document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();document.querySelector('main').focus();});
-window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0);});
-render();
-
-</script></body></html>
+    // Old links like /#desk open the same screen in Option 1.
+    if (/^#(desk|studio|shift|practice|report|connectors|guide|connector)$/.test(location.hash)) location.replace('option-1/' + location.hash);
+  </script>
+  <style>
+    :root { font: 16px/1.55 "Helvetica Neue", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif; color:#202022; background:#fff; --quiet:#65656b; --rule:#e3e3e7; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#fff; }
+    main { width:min(880px, calc(100% - 32px)); margin:auto; padding:64px 0 40px; }
+    h1 { font-size:clamp(30px,4vw,40px); font-weight:400; letter-spacing:-.03em; margin:0 0 10px; line-height:1.15; }
+    p { margin:0; max-width:62ch; }
+    .lede { color:#46464c; margin-bottom:32px; }
+    .options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    .option { border:1px solid var(--rule); border-radius:10px; padding:22px; display:flex; flex-direction:column; gap:10px; color:inherit; text-decoration:none; }
+    a.option:hover { border-color:#9aa6bd; background:#fafbfd; }
+    a.option:focus-visible { outline:3px solid #5480ff; outline-offset:3px; }
+    .label { font-size:12px; color:var(--quiet); font-weight:500; }
+    h2 { font-size:21px; font-weight:450; letter-spacing:-.02em; margin:0; }
+    .option p { color:#46464c; font-size:15px; }
+    .go { margin-top:auto; padding-top:6px; color:#2046c8; font-weight:500; font-size:14px; }
+    .soon { margin-top:auto; padding-top:6px; color:var(--quiet); font-size:14px; }
+    footer { margin-top:40px; padding-top:16px; border-top:1px solid var(--rule); font-size:12px; color:var(--quiet); }
+    @media (max-width:640px) { main { padding-top:36px; } .options { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Flipkart Knowledge</h1>
+    <p class="lede">Design options for a support knowledge system. Each one follows a fictional cashback offer from review to a customer call. All data is sample data.</p>
+    <div class="options">
+      <a class="option" href="option-1/#desk">
+        <span class="label">Option 1</span>
+        <h2>Knowledge workspace</h2>
+        <p>A separate workspace for support agents, content admins and team managers. Ask about an order, publish an offer change, practise it, and see who understood it.</p>
+        <span class="go">Open Option 1 →</span>
+      </a>
+      <div class="option">
+        <span class="label">Option 2</span>
+        <h2>Knowledge inside the ticket</h2>
+        <p>Answers and order facts appear next to the customer ticket the agent is already working on.</p>
+        <span class="soon">In progress</span>
+      </div>
+    </div>
+    <footer>Fictional offer · Scripted demo · Not connected to Flipkart systems</footer>
+  </main>
+</body>
+</html>
