@@ -244,6 +244,19 @@ summary { cursor: pointer; color: var(--accent); font-size: 14px; }
   [data-route="desk"] .actions { margin:6px 0 0; }
   [data-route="desk"] footer { padding-block:6px; }
 }
+.workspace-nav nav { display:block; margin:0; overflow:visible; }
+.workspace-nav h2 { font-size:13px; line-height:1.4; font-weight:500; letter-spacing:normal; color:var(--quiet); margin:0 12px 6px; }
+.workspace-nav .nav-links { display:grid; gap:3px; }
+.workspace-nav { margin-top:32px; }
+.workspace-nav nav + nav { border-top:1px solid var(--rule); padding-top:18px; margin-top:18px; }
+@media(max-width:939px) {
+  .mast { display:block; padding-block:12px; }
+  .workspace-nav { margin-top:12px; }
+  .workspace-nav h2 { margin:0; font-size:12px; }
+  .workspace-nav .nav-links { display:flex; flex-wrap:wrap; gap:0 15px; }
+  .workspace-nav nav + nav { margin-top:5px; padding-top:7px; }
+  .workspace-nav a { padding:5px 0; }
+}
 </style></head>
 <body>
   <a class="skip" href="#workspace-main">Skip to content</a>
@@ -356,12 +369,22 @@ function report(){
     <p class="meta">Counts start at zero when you open the demo.</p></div>${handoff('studio','Review offer history')}`;
 }
 const views={desk:agent,studio:review,shift:briefing,practice,report};
+const navigationGroups = [
+  {label:'Support agents', routes:['desk','shift','practice']},
+  {label:'Content admins & team managers', routes:['studio','report']}
+];
+function workspaceNavigation(route){
+  return navigationGroups.map(({label,routes}) => {
+    const links = routes.map(id => `<a href="#${id}" ${id===route?'aria-current="page"':''}>${screens[id]}</a>`).join('');
+    return `<nav aria-label="${label}"><h2>${label}</h2><div class="nav-links">${links}</div></nav>`;
+  }).join('');
+}
 function render(){
   const key=location.hash.slice(1);
   const route=({guide:'practice',connector:'desk'})[key] || (Object.hasOwn(views,key)?key:'desk');
   document.body.dataset.route=route;
   app.innerHTML=`<header class="mast"><a class="brand" href="#desk">Flipkart<span> / </span>Knowledge</a>
-    <nav aria-label="Workspace navigation">${Object.entries(screens).map(([id,label])=>`<a href="#${id}" ${id===route?'aria-current="page"':''}>${label}</a>`).join('')}</nav></header>
+    <div class="workspace-nav">${workspaceNavigation(route)}</div></header>
     <main class="stage" id="workspace-main" tabindex="-1">${views[route]()}</main><footer>Flipkart knowledge workspace <span>Fictional offer · Scripted demo</span></footer>`;
   document.title=screens[route]+' · Flipkart Knowledge';
   if(route==='desk'){
