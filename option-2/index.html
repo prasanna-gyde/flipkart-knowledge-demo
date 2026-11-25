@@ -36,6 +36,8 @@ svg.i { width:16px; height:16px; flex:none; fill:none; stroke:currentColor; stro
 .modes a { display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; text-decoration:none; color:var(--muted); font-size:13px; font-weight:500; white-space:nowrap; }
 .modes a[aria-current] { background:#fff; color:var(--ink); box-shadow:0 1px 2px rgba(16,24,40,.12); }
 .top-right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+.all-options { display:inline-flex; align-items:center; gap:4px; font-size:13px; font-weight:500; text-decoration:none; color:var(--muted); padding:6px 8px; border-radius:8px; white-space:nowrap; }
+.all-options:hover { background:#f1f2f5; color:var(--ink); }
 .badge { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:3px 10px; border-radius:999px; background:var(--green-soft); color:var(--green); white-space:nowrap; }
 .badge::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
 .guide { position:relative; }
@@ -250,6 +252,7 @@ dialog.modal { border:0; border-radius:16px; padding:0; width:min(540px,94vw); m
   .messages { max-height:none; }
 }
 @media (max-width:760px) {
+  .top-right { flex-wrap:wrap; row-gap:6px; justify-content:flex-end; }
   .topbar { height:auto; flex-wrap:wrap; padding:10px 16px; gap:10px; position:static; }
   .modes { order:3; width:100%; }
   .modes a { flex:1; justify-content:center; min-height:38px; }
@@ -283,6 +286,8 @@ dialog.modal { border:0; border-radius:16px; padding:0; width:min(540px,94vw); m
 :root { --bg:#f5f6fa; --blue:#4f46e5; --blue-ink:#3b33c4; --blue-soft:#eeedfd; --line:#e3e4ee; --line-strong:#cfd1df; }
 .topbar { background:#11162a; border-color:#11162a; }
 .topbar .brand, .topbar .product { color:#fff; }
+.topbar .all-options { color:#c5cbe0; }
+.topbar .all-options:hover { background:#1c2340; color:#fff; }
 .topbar .badge { background:#183a30; color:#86e5b8; }
 .guide summary { color:#fff; border-color:#3b4366; }
 .guide summary:hover { background:#1c2340; }
@@ -320,6 +325,7 @@ const icons = {
   desk:'<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M9 9v9"/>',
   app:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
   send:'<path d="M12 19V5M5 12l7-7 7 7"/>',
+  back:'<path d="M15 18l-6-6 6-6"/>',
   open:'<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'
 };
 const icon = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${icons[n]}</svg>`;
@@ -714,7 +720,7 @@ function render() {
   const mode = 'app';
   state.visited.add(route);
   const top = `<header class="topbar"><a class="brand" href="#ask" aria-label="Flipkart Knowledge, Ask">${logo()}<span class="product">Knowledge</span></a>
-    <div class="top-right"><span class="badge">Cashback ${rev(state.version)} live</span>${guide()}</div></header>`;
+    <div class="top-right"><a class="all-options" href="../">${icon('back')}All options</a><span class="badge">Cashback ${rev(state.version)} live</span>${guide()}</div></header>`;
   let body;
   {
     const side = groups.map(([g,ids])=>`<h2>${g}</h2>${ids.map(id=>`<a href="#${id}" ${id===route?'aria-current="page"':''}>${icon(appRoutes[id][1])}${appRoutes[id][0]}${id==='updates'&&state.version===2&&!state.read.has(2)?'<span class="count">1</span>':''}${id==='changes'&&state.version===1&&state.review==='pending'?'<span class="count">1</span>':''}</a>`).join('')}`).join('');
