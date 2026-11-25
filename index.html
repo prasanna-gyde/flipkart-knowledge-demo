@@ -219,6 +219,10 @@ summary { cursor: pointer; color: var(--accent); font-size: 14px; }
 .stage td,.stage th { padding:10px 4px; border-bottom:1px solid var(--rule); vertical-align:top; }
 .stage th { font-weight:500; }
 @media(max-width:760px){ .columns { grid-template-columns:1fr; } .sheet { padding:14px; } }
+.tree-options {display:grid; gap:8px; margin-top:16px;}
+.tree-options button {justify-content:space-between; text-align:left; color:var(--ink); background:white; border-color:var(--rule);}
+.tree-options button:hover {background:#eff5f1; border-color:#9cbbaa;}
+.tree-trail {font-size:13px; color:var(--quiet);}
 </style></head>
 <body>
   <a class="skip" href="#workspace-main">Skip to content</a>
@@ -289,15 +293,40 @@ function briefing(){
     <section><h2>Use the update</h2><p>Try a sample call about an ₹850 UPI order under ${revision(v)}.</p>${button('newcall','Open sample call')}
     ${handoff('practice','Take the knowledge check')}</section></div>`;
 }
+const treePath = [];
+function decisionTree(){
+  const minimum=money(rules[state.version].min);
+  const nodes={
+    payment:{title:'How did the customer pay?',choices:[['UPI','amount'],['Card or another method','other'],['Payment method unknown','receipt']]},
+    amount:{title:'How much did they pay after discounts?',choices:[['At least '+minimum,'cashback'],['Less than '+minimum,'below'],['Amount unknown','amountCheck']]},
+    cashback:{title:'What does the cashback status show?',choices:[['Credited','credited'],['Missing','missing'],['Status unavailable','statusCheck']]},
+    other:{title:'Explain the payment rule',text:'This offer applies to UPI payments only.'},
+    receipt:{title:'Check the payment method',text:'Open the payment details before deciding whether the order qualifies.'},
+    below:{title:'Explain the minimum spend',text:'The customer paid less than '+minimum+' after discounts, so this order does not qualify.'},
+    amountCheck:{title:'Check the final amount',text:'Find the amount paid on the receipt, then return to the spend question.'},
+    credited:{title:'Show the customer the credit',text:'Confirm the ₹50 cashback entry with the customer.'},
+    missing:{title:'Check the missing credit',text:'The order meets the offer terms. Ask the payments team to check why the ₹50 credit is missing.'},
+    statusCheck:{title:'Confirm the cashback status',text:'Check the payment record before telling the customer that the cashback has arrived.'}
+  };
+  let node=nodes.payment;
+  const trail=[];
+  for(const choice of treePath){
+    const [label,next]=node.choices[choice];
+    trail.push(label);node=nodes[next];
+  }
+  return `<section class="sheet" aria-label="Interactive decision tree"><p class="meta">Decision tree · ${revision(state.version)}</p>
+    ${trail.length?'<p class="tree-trail">'+trail.join(' → ')+'</p>':''}
+    <h2 tabindex="-1" id="tree-question">${node.title}</h2>
+    ${node.choices?`<div class="tree-options">${node.choices.map(([label],i)=>`<button type="button" data-branch="${i}">${label} <span aria-hidden="true">→</span></button>`).join('')}</div>`:'<p role="status">'+node.text+'</p>'}
+    ${trail.length?'<div class="actions">'+button('tree-back','Back one step',true)+button('tree-reset','Start again',true)+'</div>':''}</section>`;
+}
 function practice(){
   const v=state.version;
   const last=state.attempts.filter(a=>a.version===v).at(-1);
-  return intro('Practice call','Check the customer’s order','Use the rule that applied when the customer placed the order.')+
-    `<div class="columns"><section class="sheet"><p class="meta">Sample order · ${revision(v)}</p><h2>Does this order qualify?</h2>
+  return intro('Practice call','Cashback decision tree','Choose a payment method to start. Each answer leads to the next question or a suggested action.')+
+    `<div class="columns">${decisionTree()}<section class="sheet"><p class="meta">Knowledge check · Sample order · ${revision(v)}</p><h2>Does this order qualify?</h2>
     <p>The list price was ₹1,100. The customer used a discount and paid ₹850 by UPI.</p><div class="actions">${button('yes','Yes, it qualifies',true)}${button('no','No, it falls short',true)}</div>
-    ${last?`<div class="info" role="status"><strong>${last.correct?'Correct.':'Try again.'}</strong> Compare the ₹850 payment with the ${money(rules[v].min)} minimum.</div>`:''}</section>
-    <section><h2>Decision tree</h2><ol><li>Check the payment method. This customer used UPI.</li><li>Compare the amount paid after discounts with the offer minimum of ${money(rules[v].min)}.</li><li>If it meets the minimum, check cashback status. Otherwise, explain the offer terms.</li></ol>
-    ${handoff('report','See the team report')}</section></div>`;
+    ${last?`<div class="info" role="status"><strong>${last.correct?'Correct.':'Try again.'}</strong> Compare the ₹850 payment with the ${money(rules[v].min)} minimum.</div>`:''}${handoff('report','See the team report')}</section></div>`;
 }
 function report(){
   return intro('Content studio','Team report','Reading an update and answering the practice question are counted separately.')+
@@ -342,6 +371,14 @@ app.addEventListener('change',e=>{
   if(e.target.id==='source'){state.field=e.target.value;showMapping();}
 });
 app.addEventListener('click',e=>{
+  const branch=e.target.closest('[data-branch]');
+  const treeAction=e.target.closest('[data-action]')?.dataset.action;
+  if(branch || treeAction==='tree-back' || treeAction==='tree-reset'){
+    if(branch)treePath.push(Number(branch.dataset.branch));
+    else if(treeAction==='tree-back')treePath.pop();
+    else treePath.length=0;
+    render();document.querySelector('#tree-question').focus();return;
+  }
   const citation=e.target.closest('[data-turn]');
   if(citation){state.selected=Number(citation.dataset.turn);render();return;}
   const action=e.target.closest('[data-action]')?.dataset.action;
@@ -350,7 +387,7 @@ app.addEventListener('click',e=>{
     case 'script':return ask('What should I say?','script');
     case 'return':state.review='returned';state.history.push('Arjun sent v2.0 back to Meera.');break;
     case 'resubmit':state.review='pending';state.clarified=true;state.history.push('Meera confirmed the new minimum applies to v2.0 orders and resubmitted the draft.');break;
-    case 'publish':state.version=2;state.history.push('Arjun approved and published v2.0.');break;
+    case 'publish':treePath.length=0;state.version=2;state.history.push('Arjun approved and published v2.0.');break;
     case 'read':state.read.add(state.version);break;
     case 'newcall':startCase();location.hash='desk';return;
     case 'yes':case 'no':state.attempts.push({version:state.version,correct:(action==='yes')===eligible(state.version)});break;
