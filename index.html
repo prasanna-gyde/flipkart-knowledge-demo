@@ -163,6 +163,20 @@ summary { cursor: pointer; color: var(--accent); font-size: 14px; }
 [data-route="guide"],[data-route="connector"] { background: #f9faf9; color: #202022; --ink:#202022; --quiet:#56605a; --rule:#d8dfda; --accent:#225645; }
 [data-route="guide"] .secondary { color:#214438; border-color:#acbcb2; }
 
+[data-route="connector"] select {
+  appearance: none;
+  width: min(100%, 24rem);
+  min-height: 44px;
+  padding: 10px 42px 10px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%2356605a' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+}
+@media (forced-colors: active) { [data-route="connector"] select { appearance: auto; } }
+.sample-dialogue { margin: 22px 0; }
+.sample-dialogue p { margin: 2px 0 10px; }
+.sample-dialogue strong { color: var(--quiet); font-size: 12px; font-weight: 500; }
+.thread:empty { display: none; }
 </style>
 </head>
 <body>
@@ -192,11 +206,11 @@ const shapes = {
 function icon(id) {
   return '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+shapes[id]+'"/></svg>';
 }
-const turns = [{ question:'What if the pickup was missed?', kind:'policy' }];
+const turns = [];
 let selectedTurn = 0;
 
 function desk(){
-  const turn = turns[selectedTurn];
+  const turn = turns[selectedTurn] || {kind:'policy'};
   const supported = turn.kind !== 'unknown';
   const evidence = supported ? `<small>APPROVED SOURCE · v${version()}</small><h2>Returns playbook</h2>
     <p>Returns enablement · Section 3.2</p><hr><h3>Missed return pickup</h3>
@@ -209,9 +223,13 @@ function desk(){
       <h2>${canCite?'Answer from approved guidance':'Reviewer input needed'}</h2><p>${answer}</p>
       <button class="citation" data-turn="${i}" aria-pressed="${selectedTurn===i}">${canCite?'§ 3.2 · Returns playbook':'Inspect source check'} ↗</button></article>`;
   }).join('');
-  return `<div class="desk-layout"><section class="conversation"><span class="kicker">Returns operations / Simulated assistant</span><h1>Ask the playbook.</h1>
+  return `<div class="desk-layout"><section class="conversation"><span class="kicker">Returns operations / Simulated assistant</span><h1>Missed pickup</h1><section class="sample-dialogue" aria-label="Sample conversation">
+    <h2>Sample conversation</h2><strong>Customer</strong><p>I waited yesterday, but nobody came to collect my return. Can you arrange another pickup?</p>
+    <strong>Support agent</strong><p>Let me check the carrier update first. Has the pickup address changed?</p>
+    <strong>Customer</strong><p>No, it’s the same address. When can someone come back?</p>
+    <strong>Support agent</strong><p>If the carrier confirms the missed pickup, I can offer the next available slot. I’ll check that for you now.</p></section>
     <div class="thread" aria-label="Conversation history" tabindex="0">${exchanges}</div>
-    <form id="ask"><input name="question" aria-label="Policy question" required placeholder="Ask about this case…"><button>Ask ↗</button></form>
+    <form id="ask"><input name="question" aria-label="Policy question" required placeholder="Ask the assistant about this conversation…"><button>Ask ↗</button></form>
     ${actionBar(btn('ask-script','What should I say?',true),btn('ask-refund','Can I promise a refund?',true))}</section>
     <section class="source" aria-label="Evidence reader"><span class="kicker">Evidence reader</span><div class="paper">${evidence}</div><div class="handoff">${href('guide','Open pickup case FK-8042 →','link')}</div></section></div>`;
 }
