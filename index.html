@@ -177,13 +177,20 @@ summary { cursor: pointer; color: var(--accent); font-size: 14px; }
 .sample-dialogue p { margin: 2px 0 10px; }
 .sample-dialogue strong { color: var(--quiet); font-size: 12px; font-weight: 500; }
 .thread:empty { display: none; }
+.tree-paths { list-style: none; padding: 0 0 0 16px; margin: 12px 0 20px; border-left: 1px solid var(--rule); }
+.tree-path { position: relative; margin: 12px 0; padding: 12px 15px; border: 1px solid var(--rule); border-radius: 6px; }
+.tree-path::before { content: ''; position: absolute; left: -17px; top: 25px; width: 16px; border-top: 1px solid var(--rule); }
+.tree-path.recommended { border-color: #9bbcae; background: #eff7f2; }
+.tree-path small { color: var(--quiet); font-size: 12px; }
+.tree-path h3 { margin: 4px 0; }
+.tree-path p { margin: 6px 0 10px; }
 </style>
 </head>
 <body>
   <a class="skip" href="#workspace-main">Skip to content</a>
   <div id="app"></div>
   <script>
-const state = { published:false, mapped:false, field:'latest_status', event:'missed', outcome:'', responses:0, practice:'', reviewed:false };
+const state = { published:false, mapped:true, field:'latest_status', event:'missed', outcome:'', responses:0, practice:'', reviewed:false };
 const app = document.querySelector('#app');
 const version = () => state.published ? '2.1' : '2.0';
 const policy = () => state.published ? 'After a confirmed missed pickup, verify the pickup address and offer the next available slot. Confirm the customer’s preferred contact number before closing.' : 'After a confirmed missed pickup, verify the pickup address and offer the next available slot.';
@@ -237,7 +244,21 @@ function guide(){
   const eventText=state.event==='missed'?'Missed pickup confirmed':'Awaiting carrier confirmation';
   const outcome=state.outcome==='reschedule'?policy(): 'Contact logistics to confirm the event. Tell the customer you will follow up once the status is verified.';
   const evidence=state.mapped?'<div class="info"><strong>'+eventText+'</strong><p>Source · Sample logistics feed / latest_status</p></div>':'<p>Map the carrier feed to check the latest event.</p>';
-  return hero('guideHero','Guided resolution · Case FK-8042','Recover a missed pickup','<p>Returns queue / Pickup exception</p>')+grid(panel('Decision tree · v'+version(),state.outcome?'Resolution recorded':'Was the missed pickup confirmed?',state.outcome?'<p>'+outcome+'</p>'+actionBar(href('shift','Review pickup briefing →'),btn('restart','Try another path',true)): '<p>Check the carrier event, then choose the matching branch.</p>'+actionBar(btn('yes','Confirmed missed pickup'),btn('no','Event unconfirmed',true))),panel('Order context','Pickup event','<ol class="timeline"><li><small>09:10</small>Return requested</li><li><small>10:35</small>Pickup scheduled</li><li><small>Latest event</small>'+ (state.mapped ? eventText : 'Awaiting source mapping')+'</li></ol>'+tag('Simulated connector')+evidence+'<div class="row">'+href('connector',state.mapped?'Inspect connector mapping →':'Map sample logistics feed →','link')+'</div>'));
+  const branches = [
+    ['missed','Confirmed missed pickup','Verify the pickup address and offer the next available slot.','yes'],
+    ['pending','Event unconfirmed','Check with logistics before promising a slot.','no']
+  ];
+  const paths = branches.map(([event,title,advice,action])=>{
+    const recommended = event === state.event;
+    return `<li class="tree-path ${recommended?'recommended':''}">
+      <small>${recommended?'Matches the sample event':'Alternative path'}</small>
+      <h3>${title}</h3><p>${advice}</p>
+      ${state.outcome?'':btn(action,recommended?'Record this resolution':'Use this path',!recommended)}
+    </li>`;
+  }).join('');
+  const tree = '<p>Was the missed pickup confirmed by the carrier?</p><ul class="tree-paths">'+paths+'</ul>';
+  const recorded = state.outcome ? '<div class="info" role="status"><strong>Resolution recorded</strong><p>'+outcome+'</p></div>'+actionBar(href('shift','Review pickup briefing →'),btn('restart','Try another path',true)) : '';
+  return hero('guideHero','Guided resolution · Case FK-8042','Recover a missed pickup','<p>Returns queue / Pickup exception</p>')+grid(panel('Decision tree · v'+version(),'Sample decision tree',tree+recorded),panel('Order context','Pickup event','<ol class="timeline"><li><small>09:10</small>Return requested</li><li><small>10:35</small>Pickup scheduled</li><li><small>Latest event</small>'+ (state.mapped ? eventText : 'Awaiting source mapping')+'</li></ol>'+tag('Simulated connector')+evidence+'<div class="row">'+href('connector',state.mapped?'Inspect connector mapping →':'Map sample logistics feed →','link')+'</div>'));
 }
 function connector(){
   return hero('guideHero','Integration preview','Logistics connector','<p>Map an event from a fictional carrier feed into the agent’s order context.</p>')+grid(panel('Field mapping','Configure the source','<label for="field">Source field</label><select id="field"><option value="latest_status">latest_status</option><option value="tracking_ref">tracking_ref</option></select><label>Destination</label><p>Order context / Pickup event</p><label for="event">Preview record</label><select id="event"><option value="missed">FK-8042 · Missed pickup</option><option value="pending">FK-8042 · Pending confirmation</option></select>'),panel('Sample record','Mapping preview','<p id="preview"></p><div class="actions">'+btn('apply','Apply demo mapping')+'</div><p id="map-msg" role="status"></p>'));
