@@ -173,9 +173,19 @@ summary { cursor: pointer; color: var(--accent); font-size: 14px; }
   background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%2356605a' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
 }
 @media (forced-colors: active) { [data-route="connector"] select { appearance: auto; } }
-.sample-dialogue { margin: 22px 0; }
-.sample-dialogue p { margin: 2px 0 10px; }
-.sample-dialogue strong { color: var(--quiet); font-size: 12px; font-weight: 500; }
+.call-context { color: var(--quiet); margin: 8px 0 20px; }
+.thread { max-height: none; padding: 0; }
+.thread.has-followups { max-height: 62vh; }
+.exchange + .exchange { border: 0; padding: 0; margin-top: 18px; }
+.chat-message { width: fit-content; max-width: 88%; padding: 12px 16px; }
+.chat-message .speaker { display: block; font-size: 13px; font-weight: 550; }
+.chat-message p { margin: 5px 0 0; }
+.agent-message { margin: 0 0 10px auto; background: #edf2ff; border-radius: 14px 14px 3px 14px; }
+.agent-message .speaker { color: #294e97; }
+.thread .agent-message .user-prompt { background: transparent; margin: 5px 0 0; padding: 0; }
+.knowledge-message { border: 1px solid var(--rule); border-radius: 3px 14px 14px; background: white; }
+.knowledge-message .speaker { color: #245e46; }
+.knowledge-message .citation { margin-top: 5px; }
 .thread:empty { display: none; }
 .tree-paths { list-style: none; padding: 0 0 0 16px; margin: 12px 0 20px; border-left: 1px solid var(--rule); }
 .tree-path { position: relative; margin: 12px 0; padding: 12px 15px; border: 1px solid var(--rule); border-radius: 6px; }
@@ -213,7 +223,10 @@ const shapes = {
 function icon(id) {
   return '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+shapes[id]+'"/></svg>';
 }
-const turns = [];
+const turns = [
+  {question:'I have a customer on the phone. Their return wasn’t picked up yesterday. What should I check?', kind:'policy'},
+  {question:'The carrier confirmed they missed it. What can I say to the customer?', kind:'script'}
+];
 let selectedTurn = 0;
 
 function desk(){
@@ -226,17 +239,15 @@ function desk(){
   const exchanges = turns.map((item,i)=>{
     const canCite = item.kind !== 'unknown';
     const answer = item.kind==='script' ? 'You can say “'+script()+'”' : canCite ? policy() : 'Check with your team lead before you promise a refund or another outcome.';
-    return `<article class="exchange"><p class="user-prompt"></p><span class="speaker assistant">✦ &nbsp; Policy assistant</span>
-      <h2>${canCite?'What the policy says':'Ask your team lead'}</h2><p>${answer}</p>
-      <button class="citation" data-turn="${i}" aria-pressed="${selectedTurn===i}">${canCite?'§ 3.2 · Returns playbook':'See policy search'} ↗</button></article>`;
+    return `<article class="exchange">
+      <div class="chat-message agent-message"><span class="speaker">Support agent</span><p class="user-prompt"></p></div>
+      <div class="chat-message knowledge-message"><span class="speaker">Knowledge base</span><p>${answer}</p>
+      <button class="citation" data-turn="${i}" aria-pressed="${selectedTurn===i}">${canCite?'§ 3.2 · Returns playbook':'See policy search'} ↗</button></div></article>`;
   }).join('');
-  return `<div class="desk-layout"><section class="conversation"><span class="kicker">Returns operations / Simulated assistant</span><h1>Missed pickup</h1><section class="sample-dialogue" aria-label="Sample conversation">
-    <h2>Sample conversation</h2><strong>Customer</strong><p>I waited yesterday, but nobody came to collect my return. Can you arrange another pickup?</p>
-    <strong>Support agent</strong><p>Let me check the carrier update first. Has the pickup address changed?</p>
-    <strong>Customer</strong><p>No, it’s the same address. When can someone come back?</p>
-    <strong>Support agent</strong><p>The carrier has confirmed they missed your pickup. I’ll check the next available slot for that address.</p></section>
-    <div class="thread" aria-label="Conversation history" tabindex="0">${exchanges}</div>
-    <form id="ask"><input name="question" aria-label="Policy question" required placeholder="Ask the assistant about this conversation…"><button>Ask ↗</button></form>
+  return `<div class="desk-layout"><section class="conversation"><span class="kicker">Sample conversation · Case FK-8042</span><h1>Missed pickup</h1>
+    <p class="call-context">During the customer’s call, the agent checks the returns policy here.</p>
+    <div class="thread ${turns.length > 2 ? 'has-followups' : ''}" aria-label="Conversation with the knowledge base" tabindex="0">${exchanges}</div>
+    <form id="ask"><input name="question" aria-label="Policy question" required placeholder="Ask the knowledge base…"><button>Ask ↗</button></form>
     ${actionBar(btn('ask-script','What should I say?',true),btn('ask-refund','Can I promise a refund?',true))}</section>
     <section class="source" aria-label="Policy source"><span class="kicker">Policy source</span><div class="paper">${evidence}</div><div class="handoff">${href('guide','Open pickup case FK-8042 →','link')}</div></section></div>`;
 }
@@ -277,7 +288,7 @@ function render(){
   document.body.dataset.route=route;
   app.innerHTML = `<header class="mast"><a class="brand" href="#desk">Flipkart<span> / </span>Knowledge</a>
     <nav aria-label="Workspace navigation">${links.map(([id,label])=>`<a href="#${id}" ${id===route?'aria-current="page"':''}>${icon(id)}${label}</a>`).join('')}</nav>
-    </header><main id="workspace-main" tabindex="-1">${views[route]()}</main><footer>Flipkart knowledge workspace <span>Design preview · Fictional records</span></footer>`;
+    </header><main id="workspace-main" tabindex="-1">${views[route]()}</main><footer>Flipkart knowledge workspace <span>Demo · Sample data and scripted answers</span></footer>`;
   document.title=links.find(([id])=>id===route)[1]+' · Flipkart Knowledge';
   if(route==='connector'){document.querySelector('#field').value=state.field;document.querySelector('#event').value=state.event;preview();}
   document.querySelectorAll('.user-prompt').forEach((el,i)=>{ el.textContent=turns[i].question; });
