@@ -278,6 +278,24 @@ dialog.modal { border:0; border-radius:16px; padding:0; width:min(540px,94vw); m
   .chip { min-height:38px; }
   .btn.small { min-height:38px; }
 }
+
+/* Option 2 palette: navy frame, indigo actions, Flipkart yellow for the current page */
+:root { --bg:#f5f6fa; --blue:#4f46e5; --blue-ink:#3b33c4; --blue-soft:#eeedfd; --line:#e3e4ee; --line-strong:#cfd1df; }
+.topbar { background:#11162a; border-color:#11162a; }
+.topbar .brand, .topbar .product { color:#fff; }
+.topbar .badge { background:#183a30; color:#86e5b8; }
+.guide summary { color:#fff; border-color:#3b4366; }
+.guide summary:hover { background:#1c2340; }
+.topbar :focus-visible, .side :focus-visible { outline-color:#ffe51f; }
+.side { background:#11162a; border-color:#11162a; }
+.side h2 { color:#7f89ab; }
+.side a { color:#c5cbe0; }
+.side a:hover { background:#1c2340; color:#fff; }
+.side a[aria-current] { background:#262e53; color:#fff; box-shadow:inset 3px 0 #ffe51f; }
+.side .count { background:#ffe51f; color:#11162a; font-weight:600; }
+.askbar button { background:var(--blue); }
+.chip[aria-pressed=true] { background:var(--blue); border-color:var(--blue); }
+.verdict.info { border-color:#d6d3fb; }
 </style>
 </head>
 <body>
