@@ -532,7 +532,7 @@ function tour(){
 }
 function render(){
   const key=location.hash.slice(1);
-  const route=({guide:'practice',connector:'desk'})[key] || (Object.hasOwn(views,key)?key:'desk');
+  const route=Object.hasOwn(views,key)?key:'desk';
   state.visited.add(route);
   document.body.dataset.route=route;
   app.innerHTML=`<header class="mast"><a class="brand" href="#desk">Flipkart Knowledge</a><span class="live-badge">Live offer · ${revision(state.version)}</span>
@@ -545,7 +545,6 @@ function render(){
   }
   if(route==='desk'){
     document.querySelectorAll('.question').forEach((el,i)=>el.textContent=state.turns[i].question);
-    if(key==='connector')openChatDetails(true);
   }
 }
 function openChatDetails(showOrder){
