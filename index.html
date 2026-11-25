@@ -393,7 +393,7 @@ function render(){
   const key=location.hash.slice(1);
   const route=({guide:'practice',connector:'desk'})[key] || (Object.hasOwn(views,key)?key:'desk');
   document.body.dataset.route=route;
-  app.innerHTML=`<header class="mast"><a class="brand" href="#desk">Flipkart<span> / </span>Knowledge</a>
+  app.innerHTML=`<header class="mast"><a class="brand" href="#desk">Flipkart Knowledge</a>
     <div class="workspace-nav">${workspaceNavigation(route)}</div></header>
     <main class="stage" id="workspace-main" tabindex="-1">${views[route]()}</main><footer>Flipkart knowledge workspace <span>Fictional offer · Scripted demo</span></footer>`;
   document.title=screens[route]+' · Flipkart Knowledge';
