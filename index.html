@@ -223,26 +223,35 @@ summary { cursor: pointer; color: var(--accent); font-size: 14px; }
 .tree-options button {justify-content:space-between; text-align:left; color:var(--ink); background:white; border-color:var(--rule);}
 .tree-options button:hover {background:#eff5f1; border-color:#9cbbaa;}
 .tree-trail {font-size:13px; color:var(--quiet);}
-@media (min-width:940px) and (min-height:600px) {
-  [data-route="desk"] #app { height:100dvh; grid-template-rows:minmax(0,1fr) auto; }
-  [data-route="desk"] .stage { height:100%; min-height:0; padding-block:18px 8px; display:flex; flex-direction:column; }
-  [data-route="desk"] .stage header { margin-bottom:14px; padding-bottom:10px; }
-  [data-route="desk"] .stage header p { margin:3px 0; }
-  [data-route="desk"] .stage h1 { font-size:clamp(32px,3vw,42px); margin:5px 0; }
-  [data-route="desk"] .columns { flex:1; min-height:0; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); }
-  [data-route="desk"] .columns > section:first-child { min-height:0; display:flex; flex-direction:column; }
-  [data-route="desk"] .columns > section:last-child { overflow-y:auto; }
-  [data-route="desk"] .thread { overflow-y:auto; min-height:0; scrollbar-gutter:stable; }
-  [data-route="desk"] .exchange { margin:0; }
-  [data-route="desk"] .exchange + .exchange { margin-top:10px; }
-  [data-route="desk"] .chat-message { padding:7px 12px; max-width:94%; font-size:15px; line-height:1.4; }
-  [data-route="desk"] .agent-message { margin-bottom:6px; }
-  [data-route="desk"] .chat-message .speaker { margin:0; font-size:12px; }
-  [data-route="desk"] .chat-message p { margin:2px 0; }
-  [data-route="desk"] .citation { margin:0; min-height:24px; }
-  [data-route="desk"] #ask, [data-route="desk"] .actions { flex-shrink:0; }
-  [data-route="desk"] .actions { margin:6px 0 0; }
-  [data-route="desk"] footer { padding-block:6px; }
+[data-route="desk"] .stage { width:100%; max-width:none; padding:0; margin:0; display:flex; flex-direction:column; min-width:0; }
+[data-route="desk"] footer { display:none; }
+.stage .chat-bar { display:flex; align-items:center; justify-content:space-between; padding:14px clamp(16px,3vw,44px); margin:0; border:0; }
+.stage .chat-bar h1 { font-size:20px; font-weight:450; letter-spacing:-.035em; margin:0; }
+.chat-bar button, .chat-dialog .close { background:transparent; color:var(--quiet); border:1px solid var(--rule); border-radius:22px; font-size:13px; padding:5px 13px; min-height:34px; }
+.stage .thread, .chat-compose { width:min(760px,calc(100% - 36px)); margin-inline:auto; }
+.stage .thread { padding:16px 0; margin-block:0; overflow-wrap:anywhere; }
+.stage .exchange { margin:0; }
+.stage .exchange + .exchange { margin-top:20px; }
+.stage .chat-message { padding:0; font-size:16px; line-height:1.5; }
+.stage .agent-message { background:#ecf4fc; padding:9px 16px; margin:0 0 14px auto; border-radius:18px; }
+.stage .knowledge-message { border:0; }
+.stage .chat-message .speaker { font-size:12px; margin:0; }
+.stage .thread p { margin:2px 0; }
+.stage .citation { margin:0; min-height:24px; }
+.chat-compose { padding:8px 0 16px; }
+.chat-compose .actions { margin:0 0 5px; }
+.chat-compose .actions button { background:none; border:0; color:var(--quiet); min-height:28px; font-size:13px; padding:2px 8px; }
+.chat-compose #ask { border-radius:28px; padding:5px 6px 5px 16px; border-color:#d7d9dd; box-shadow:0 2px 10px #10182809; }
+.chat-compose #ask button { border-radius:50%; width:38px; min-height:38px; padding:0; font-size:20px; }
+.chat-dialog { width:min(460px,92vw); max-height:85dvh; overflow:auto; border:1px solid var(--rule); border-radius:16px; padding:24px; color:var(--ink); }
+.chat-dialog::backdrop { background:#17233244; }
+.chat-dialog .close { float:right; }
+.chat-dialog .sheet { padding:10px 0; border:0; }
+@media(min-width:940px) and (min-height:600px){
+  [data-route="desk"] #app { height:100dvh; grid-template-rows:minmax(0,1fr); }
+  [data-route="desk"] .mast { grid-row:1; }
+  [data-route="desk"] .stage { height:100%; min-height:0; }
+  .stage .thread { flex:1; min-height:0; overflow-y:auto; }
 }
 .workspace-nav nav { display:block; margin:0; overflow:visible; }
 .workspace-nav h2 { font-size:13px; line-height:1.4; font-weight:500; letter-spacing:normal; color:var(--quiet); margin:0 12px 6px; }
@@ -300,15 +309,16 @@ function agent(){
   const conversation=state.turns.map((t,i)=>`<article class="exchange">
     <div class="chat-message agent-message"><span class="speaker">Support agent</span><p class="question"></p></div>
     <div class="chat-message knowledge-message"><span class="speaker">Knowledge base</span><p>${answer(t)}</p>
-    <button class="citation" data-turn="${i}" aria-pressed="${i===state.selected}">${t.kind==='unknown'?'Check policy coverage':'Offer terms · '+revision(t.version)} ↗</button></div></article>`).join('');
-  return intro('Agent workspace · Sample call','Where’s my cashback?','The agent checks the offer while the customer is on the phone.')+
-    `<div class="columns"><section><div class="thread" tabindex="0" aria-label="Sample conversation">${conversation}</div>
-    <form id="ask"><input name="question" required aria-label="Ask the knowledge base" placeholder="Ask about this offer"><button>Ask</button></form><div class="actions">${button('script','What should I say?',true)}</div></section>
-    <section><div class="sheet" aria-live="polite">${tip}<h2>Approved offer terms</h2><p class="meta">Returns & payments team · ${revision(selected.version)}</p>
-    ${selected.kind==='unknown'?'<p>No matching rule. Ask your team lead.</p>':policy(selected.version)}</div>
+    <button class="citation" data-turn="${i}" aria-haspopup="dialog">${t.kind==='unknown'?'Check policy coverage':'Offer terms · '+revision(t.version)} ↗</button></div></article>`).join('');
+  return `<header class="chat-bar"><h1>Where’s my cashback?</h1><button data-open-order aria-haspopup="dialog">Order details</button></header>
+    <div class="thread" tabindex="0" aria-label="Sample conversation">${conversation}</div>
+    <div class="chat-compose"><div class="actions">${button('script','What should I say?',true)}</div>
+    <form id="ask"><input name="question" required aria-label="Ask the knowledge base" placeholder="Ask the knowledge base"><button aria-label="Send question">↑</button></form></div>
+    <dialog class="chat-dialog" aria-labelledby="terms-title"><button class="close" data-close>Close</button><div class="sheet">${tip}<h2 id="terms-title">Approved offer terms</h2><p class="meta">Returns & payments team · ${revision(selected.version)}</p>
+    <div id="turn-policy">${policy(selected.version)}</div></div>
     <details class="sheet"><summary>Order details & custom connector</summary><p>Sample order FK-8042 · Offer ${revision(state.turns[0].version)}</p><p>List price ₹1,100 · Paid ₹850 · UPI</p>
     <label for="source">Order field for checking the minimum spend</label><select id="source"><option value="paid_amount">Amount paid after discounts</option><option value="list_price">List price before discounts</option></select><p id="mapping" role="status"></p></details>
-    ${state.version===2?handoff('practice','Practise this offer rule'):handoff('studio','Review the offer change')}</section></div>`;
+    ${state.version===2?handoff('practice','Practise this offer rule'):handoff('studio','Review the offer change')}</dialog>`;
 }
 function review(){
   const done=state.version===2;
@@ -391,8 +401,15 @@ function render(){
     document.querySelectorAll('.question').forEach((el,i)=>el.textContent=state.turns[i].question);
     document.querySelector('#source').value=state.field;
     showMapping();
-    if(key==='connector')document.querySelector('.stage details').open=true;
+    if(key==='connector')openChatDetails(true);
   }
+}
+function openChatDetails(showOrder){
+  const dialog=document.querySelector('.chat-dialog');
+  const turn=state.turns[state.selected];
+  dialog.querySelector('#turn-policy').innerHTML=turn.kind==='unknown'?'<p>No matching rule. Ask your team lead.</p>':policy(turn.version);
+  dialog.querySelector('details').open=showOrder;
+  dialog.showModal();
 }
 function showMapping(){
   const el=document.querySelector('#mapping');
@@ -403,6 +420,7 @@ function ask(question,kind){
   state.turns.push({question,kind,version:state.turns[0].version});
   state.selected=state.turns.length-1;render();
   const thread=document.querySelector('.thread');thread.scrollTop=thread.scrollHeight;
+  document.querySelector('#ask input').focus({preventScroll:true});
 }
 app.addEventListener('submit',e=>{
   e.preventDefault();
@@ -424,7 +442,9 @@ app.addEventListener('click',e=>{
     render();document.querySelector('#tree-question').focus();return;
   }
   const citation=e.target.closest('[data-turn]');
-  if(citation){state.selected=Number(citation.dataset.turn);render();return;}
+  if(citation){state.selected=Number(citation.dataset.turn);openChatDetails(false);return;}
+  if(e.target.closest('[data-open-order]')){openChatDetails(true);return;}
+  if(e.target.closest('[data-close]')){document.querySelector('.chat-dialog').close();return;}
   const action=e.target.closest('[data-action]')?.dataset.action;
   if(!action)return;
   switch(action){
