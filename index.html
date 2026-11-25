@@ -242,6 +242,11 @@ summary { cursor: pointer; color: var(--accent); font-size: 14px; }
 .chat-compose .actions { margin:0 0 5px; }
 .chat-compose .actions button { background:none; border:0; color:var(--quiet); min-height:28px; font-size:13px; padding:2px 8px; }
 .chat-compose #ask { border-radius:28px; padding:5px 6px 5px 16px; border-color:#d7d9dd; box-shadow:0 2px 10px #10182809; }
+.chat-compose #ask:has(input:focus) { border-color:#68798c; box-shadow:0 0 0 1px #68798c; }
+.chat-compose #ask input:focus { outline:none; }
+@media (forced-colors:active) {
+  .chat-compose #ask:has(input:focus) { outline:2px solid Highlight; outline-offset:1px; }
+}
 .chat-compose #ask button { border-radius:50%; width:38px; min-height:38px; padding:0; font-size:20px; }
 .chat-dialog { width:min(460px,92vw); max-height:85dvh; overflow:auto; border:1px solid var(--rule); border-radius:16px; padding:24px; color:var(--ink); }
 .chat-dialog::backdrop { background:#17233244; }
